@@ -1,0 +1,22 @@
+public final class com.example.shentanli.silentinstall.R$layout extends java.lang.Object
+{
+    public static final int activity_main;
+
+    public void <init>()
+    {
+        com.example.shentanli.silentinstall.R$layout $r0;
+
+        $r0 := @this: com.example.shentanli.silentinstall.R$layout;
+
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <com.example.shentanli.silentinstall.R$layout: int activity_main> = 2130903040;
+
+        return;
+    }
+}

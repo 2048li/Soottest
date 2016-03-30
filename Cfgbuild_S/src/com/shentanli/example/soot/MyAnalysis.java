@@ -29,8 +29,7 @@ public class MyAnalysis extends BodyTransformer{
 				//if (!m.isJavaLibraryMethod())
 				{
 					Body b = m.retrieveActiveBody();
-				//	List<ValueBox> vale = b.getDefBoxes();
-					
+				//	List<ValueBox> vale = b.getDefBoxes();					
 				//	List<Value> pararef = b.getParameterRefs();
 				//	String[] y = pararef.toArray(new String[0]);
 				//	int len = y.length;
@@ -41,32 +40,91 @@ public class MyAnalysis extends BodyTransformer{
 						//System.out.println("pararef--"+y[i]);
 						System.out.println("boxvalue ---"+tmp);
 					} */
-					java.util.Iterator<Unit> i = b.getUnits().snapshotIterator();
-			     	while(i.hasNext())
-					{
-						Unit u = i.next();
-						List usebox = u.getUseBoxes();
-					    int len = usebox.size();
-					    
-						for (int count = 0;count<len;count++)
-						{
-							if (usebox.get(count).toString().indexOf("pm install") != -1)
-								System.out.println("usebox value--"+usebox.get(count));
-							//System.out.println("usebox value--"+usebox.get(count));
-						}
+					String valuename = "pm install";
+					String methodname = "getRuntime";
+					boolean l1 = judgestrvalue(valuename, b);
+					boolean l2 = judgemethod(methodname, b);
 						
-					/*	String substr = "getRuntime";
-						if (u.toString().indexOf(substr) != -1)
-							System.out.println("unit contains getpah :"+u.toString());   
-						//System.out.println("unit --"+u.toString());
-						else
-							System.out.println("no getruntime method");*/
+						if (l1 && l2)
+						{
+							System.out.println("both pminstall and getruntime body");
+						}
 					}
+					
+	
 				}
 			}
 		}
+
+	
+	public boolean judgestrvalue(String valuename, Body b)
+	{
+		java.util.Iterator<Unit> i = b.getUnits().snapshotIterator();
+		boolean result = false;
+		while(i.hasNext())
+		{
+			Unit u = i.next();
+			List usebox = u.getUseAndDefBoxes();
+			int len = usebox.size();
+			String substr2 = "pm install";
+				for (int count = 0;count<len;count++)
+				{
+					if (usebox.get(count).toString().indexOf(substr2) != -1){
+						result = true;
+					    System.out.println("also contains pm install--"+usebox.get(count));	
+					}
+						
+				}
+				
+			}
+		return result;
+		
+		//get the value
+		/*	for (Unit ut: b.getUnits())
+			{
+				for (ValueBox vb : ut.getUseBoxes())
+					if (vb.getValue().equals("pm install"))
+						System.out.println("value--"+vb.getValue().toString());
+			}*/
+		
+		 /*  	while(i.hasNext())
+		{
+			Unit u = i.next();
+			List usebox = u.getUseBoxes();
+		    int len = usebox.size();
+		    
+			for (int count = 0;count<len;count++) 
+			{
+				if (usebox.get(count).toString().indexOf("pm install") != -1){
+					l1 = true;
+					//System.out.println("usebox value--"+usebox.get(count));
+				}
+				//System.out.println("usebox value--"+usebox.get(count));
+			}*/
+	}
+     
+	public boolean judgemethod(String methodname, Body b)
+	{
+		boolean result = false;
+
+		java.util.Iterator<Unit> i = b.getUnits().snapshotIterator();
+		Unit u = i.next();
+		
+		if (u.toString().indexOf(methodname) != -1)
+		{
+			System.out.println("unit contains method"+u.toString());  
+			result = true;
+			
+		}
+		else
+			System.out.println("no the method you search");
+		return result;
 		
 	}
 	
+	
+	}
+	
 
-}
+
+

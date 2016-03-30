@@ -1,0 +1,25 @@
+public final class com.example.shentanli.silentinstall.R$dimen extends java.lang.Object
+{
+    public static final int activity_horizontal_margin;
+    public static final int activity_vertical_margin;
+
+    public void <init>()
+    {
+        com.example.shentanli.silentinstall.R$dimen $r0;
+
+        $r0 := @this: com.example.shentanli.silentinstall.R$dimen;
+
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <com.example.shentanli.silentinstall.R$dimen: int activity_vertical_margin> = 2130968577;
+
+        <com.example.shentanli.silentinstall.R$dimen: int activity_horizontal_margin> = 2130968576;
+
+        return;
+    }
+}

@@ -1,0 +1,22 @@
+public final class com.example.shentanli.silentinstall.R$style extends java.lang.Object
+{
+    public static final int AppTheme;
+
+    public void <init>()
+    {
+        com.example.shentanli.silentinstall.R$style $r0;
+
+        $r0 := @this: com.example.shentanli.silentinstall.R$style;
+
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <com.example.shentanli.silentinstall.R$style: int AppTheme> = 2131099648;
+
+        return;
+    }
+}

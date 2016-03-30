@@ -1,0 +1,31 @@
+public final class com.example.shentanli.silentinstall.R$id extends java.lang.Object
+{
+    public static final int action_settings;
+    public static final int et_packagename;
+    public static final int installbutton;
+    public static final int uninstallbutton;
+
+    public void <init>()
+    {
+        com.example.shentanli.silentinstall.R$id $r0;
+
+        $r0 := @this: com.example.shentanli.silentinstall.R$id;
+
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    public static void <clinit>()
+    {
+        <com.example.shentanli.silentinstall.R$id: int uninstallbutton> = 2131230721;
+
+        <com.example.shentanli.silentinstall.R$id: int installbutton> = 2131230720;
+
+        <com.example.shentanli.silentinstall.R$id: int et_packagename> = 2131230722;
+
+        <com.example.shentanli.silentinstall.R$id: int action_settings> = 2131230723;
+
+        return;
+    }
+}
