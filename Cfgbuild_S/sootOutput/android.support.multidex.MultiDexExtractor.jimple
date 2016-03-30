@@ -1,0 +1,1138 @@
+final class android.support.multidex.MultiDexExtractor extends java.lang.Object
+{
+    private static final int BUFFER_SIZE;
+    private static final java.lang.String DEX_PREFIX;
+    private static final java.lang.String DEX_SUFFIX;
+    private static final java.lang.String EXTRACTED_NAME_EXT;
+    private static final java.lang.String EXTRACTED_SUFFIX;
+    private static final java.lang.String KEY_CRC;
+    private static final java.lang.String KEY_DEX_NUMBER;
+    private static final java.lang.String KEY_TIME_STAMP;
+    private static final int MAX_EXTRACT_ATTEMPTS;
+    private static final long NO_VALUE;
+    private static final java.lang.String PREFS_FILE;
+    private static final java.lang.String TAG;
+    private static java.lang.reflect.Method sApplyMethod;
+
+    static void <clinit>()
+    {
+        java.lang.Class $r0;
+        java.lang.NoSuchMethodException $r1;
+        java.lang.reflect.Method $r2;
+        java.lang.Class[] $r3;
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String TAG> = "MultiDex";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String PREFS_FILE> = "multidex.version";
+
+        <android.support.multidex.MultiDexExtractor: long NO_VALUE> = -1L;
+
+        <android.support.multidex.MultiDexExtractor: int MAX_EXTRACT_ATTEMPTS> = 3;
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String KEY_TIME_STAMP> = "timestamp";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String KEY_DEX_NUMBER> = "dex.number";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String KEY_CRC> = "crc";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String EXTRACTED_SUFFIX> = ".zip";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String EXTRACTED_NAME_EXT> = ".classes";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String DEX_SUFFIX> = ".dex";
+
+        <android.support.multidex.MultiDexExtractor: java.lang.String DEX_PREFIX> = "classes";
+
+        <android.support.multidex.MultiDexExtractor: int BUFFER_SIZE> = 16384;
+
+        $r0 = class "android/content/SharedPreferences$Editor";
+
+        $r3 = newarray (java.lang.Class)[0];
+
+     label1:
+        $r2 = virtualinvoke $r0.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("apply", $r3);
+
+     label2:
+        <android.support.multidex.MultiDexExtractor: java.lang.reflect.Method sApplyMethod> = $r2;
+
+        return;
+
+     label3:
+        $r1 := @caughtexception;
+
+        <android.support.multidex.MultiDexExtractor: java.lang.reflect.Method sApplyMethod> = null;
+
+        return;
+
+        catch java.lang.NoSuchMethodException from label1 to label2 with label3;
+    }
+
+    void <init>()
+    {
+        android.support.multidex.MultiDexExtractor $r0;
+
+        $r0 := @this: android.support.multidex.MultiDexExtractor;
+
+        specialinvoke $r0.<java.lang.Object: void <init>()>();
+
+        return;
+    }
+
+    private static void apply(android.content.SharedPreferences$Editor)
+    {
+        android.content.SharedPreferences$Editor $r0;
+        java.lang.reflect.Method $r1;
+        java.lang.Object[] $r2;
+        java.lang.IllegalAccessException $r3;
+        java.lang.reflect.InvocationTargetException $r4;
+
+        $r0 := @parameter0: android.content.SharedPreferences$Editor;
+
+        $r1 = <android.support.multidex.MultiDexExtractor: java.lang.reflect.Method sApplyMethod>;
+
+        if $r1 == null goto label4;
+
+        $r1 = <android.support.multidex.MultiDexExtractor: java.lang.reflect.Method sApplyMethod>;
+
+        $r2 = newarray (java.lang.Object)[0];
+
+     label1:
+        virtualinvoke $r1.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>($r0, $r2);
+
+     label2:
+        return;
+
+     label3:
+        $r3 := @caughtexception;
+
+     label4:
+        interfaceinvoke $r0.<android.content.SharedPreferences$Editor: boolean commit()>();
+
+        return;
+
+     label5:
+        $r4 := @caughtexception;
+
+        goto label4;
+
+        catch java.lang.reflect.InvocationTargetException from label1 to label2 with label5;
+        catch java.lang.IllegalAccessException from label1 to label2 with label3;
+    }
+
+    private static void closeQuietly(java.io.Closeable)
+    {
+        java.io.Closeable $r0;
+        java.io.IOException $r1;
+
+        $r0 := @parameter0: java.io.Closeable;
+
+     label1:
+        interfaceinvoke $r0.<java.io.Closeable: void close()>();
+
+     label2:
+        return;
+
+     label3:
+        $r1 := @caughtexception;
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", "Failed to close resource", $r1);
+
+        return;
+
+        catch java.io.IOException from label1 to label2 with label3;
+    }
+
+    private static void extract(java.util.zip.ZipFile, java.util.zip.ZipEntry, java.io.File, java.lang.String) throws java.io.IOException, java.io.FileNotFoundException
+    {
+        java.util.zip.ZipFile $r0;
+        java.util.zip.ZipEntry $r1, $r5;
+        java.io.File $r2, $r8;
+        java.lang.String $r3;
+        byte[] $r4;
+        java.util.zip.ZipOutputStream $r6;
+        java.io.InputStream $r7;
+        java.lang.StringBuilder $r9;
+        java.io.BufferedOutputStream $r10;
+        java.io.FileOutputStream $r11;
+        long $l0;
+        int $i1;
+        boolean $z0;
+        java.io.IOException $r12;
+        java.lang.Throwable $r13, $r14;
+
+        $r0 := @parameter0: java.util.zip.ZipFile;
+
+        $r1 := @parameter1: java.util.zip.ZipEntry;
+
+        $r2 := @parameter2: java.io.File;
+
+        $r3 := @parameter3: java.lang.String;
+
+        $r7 = virtualinvoke $r0.<java.util.zip.ZipFile: java.io.InputStream getInputStream(java.util.zip.ZipEntry)>($r1);
+
+        $r8 = virtualinvoke $r2.<java.io.File: java.io.File getParentFile()>();
+
+        $r8 = staticinvoke <java.io.File: java.io.File createTempFile(java.lang.String,java.lang.String,java.io.File)>($r3, ".zip", $r8);
+
+        $r9 = new java.lang.StringBuilder;
+
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("Extracting ");
+
+        $r3 = virtualinvoke $r8.<java.io.File: java.lang.String getPath()>();
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+
+        $r3 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r3);
+
+     label01:
+        $r6 = new java.util.zip.ZipOutputStream;
+
+        $r10 = new java.io.BufferedOutputStream;
+
+        $r11 = new java.io.FileOutputStream;
+
+        specialinvoke $r11.<java.io.FileOutputStream: void <init>(java.io.File)>($r8);
+
+        specialinvoke $r10.<java.io.BufferedOutputStream: void <init>(java.io.OutputStream)>($r11);
+
+        specialinvoke $r6.<java.util.zip.ZipOutputStream: void <init>(java.io.OutputStream)>($r10);
+
+     label02:
+        $r5 = new java.util.zip.ZipEntry;
+
+        specialinvoke $r5.<java.util.zip.ZipEntry: void <init>(java.lang.String)>("classes.dex");
+
+        $l0 = virtualinvoke $r1.<java.util.zip.ZipEntry: long getTime()>();
+
+        virtualinvoke $r5.<java.util.zip.ZipEntry: void setTime(long)>($l0);
+
+        virtualinvoke $r6.<java.util.zip.ZipOutputStream: void putNextEntry(java.util.zip.ZipEntry)>($r5);
+
+        $r4 = newarray (byte)[16384];
+
+        $i1 = virtualinvoke $r7.<java.io.InputStream: int read(byte[])>($r4);
+
+     label03:
+        if $i1 != -1 goto label07;
+
+        virtualinvoke $r6.<java.util.zip.ZipOutputStream: void closeEntry()>();
+
+     label04:
+        virtualinvoke $r6.<java.util.zip.ZipOutputStream: void close()>();
+
+        $r9 = new java.lang.StringBuilder;
+
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("Renaming to ");
+
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String getPath()>();
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+
+        $r3 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r3);
+
+        $z0 = virtualinvoke $r8.<java.io.File: boolean renameTo(java.io.File)>($r2);
+
+        if $z0 != 0 goto label11;
+
+        $r12 = new java.io.IOException;
+
+        $r9 = new java.lang.StringBuilder;
+
+        specialinvoke $r9.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to rename \"");
+
+        $r3 = virtualinvoke $r8.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\" to \"");
+
+        $r3 = virtualinvoke $r2.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r3);
+
+        $r9 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\"");
+
+        $r3 = virtualinvoke $r9.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r12.<java.io.IOException: void <init>(java.lang.String)>($r3);
+
+        throw $r12;
+
+     label05:
+        $r13 := @caughtexception;
+
+     label06:
+        staticinvoke <android.support.multidex.MultiDexExtractor: void closeQuietly(java.io.Closeable)>($r7);
+
+        virtualinvoke $r8.<java.io.File: boolean delete()>();
+
+        throw $r13;
+
+     label07:
+        virtualinvoke $r6.<java.util.zip.ZipOutputStream: void write(byte[],int,int)>($r4, 0, $i1);
+
+        $i1 = virtualinvoke $r7.<java.io.InputStream: int read(byte[])>($r4);
+
+     label08:
+        goto label03;
+
+     label09:
+        $r14 := @caughtexception;
+
+     label10:
+        virtualinvoke $r6.<java.util.zip.ZipOutputStream: void close()>();
+
+        throw $r14;
+
+     label11:
+        staticinvoke <android.support.multidex.MultiDexExtractor: void closeQuietly(java.io.Closeable)>($r7);
+
+        virtualinvoke $r8.<java.io.File: boolean delete()>();
+
+        return;
+
+     label12:
+        $r13 := @caughtexception;
+
+        goto label06;
+
+        catch java.lang.Throwable from label01 to label02 with label12;
+        catch java.lang.Throwable from label02 to label03 with label09;
+        catch java.lang.Throwable from label03 to label04 with label09;
+        catch java.lang.Throwable from label04 to label05 with label05;
+        catch java.lang.Throwable from label07 to label08 with label09;
+        catch java.lang.Throwable from label10 to label11 with label05;
+    }
+
+    private static android.content.SharedPreferences getMultiDexPreferences(android.content.Context)
+    {
+        android.content.Context $r0;
+        android.content.SharedPreferences $r1;
+        int $i0;
+        byte $b1;
+
+        $r0 := @parameter0: android.content.Context;
+
+        $i0 = <android.os.Build$VERSION: int SDK_INT>;
+
+        if $i0 >= 11 goto label2;
+
+        $b1 = 0;
+
+     label1:
+        $r1 = virtualinvoke $r0.<android.content.Context: android.content.SharedPreferences getSharedPreferences(java.lang.String,int)>("multidex.version", $b1);
+
+        return $r1;
+
+     label2:
+        $b1 = 4;
+
+        goto label1;
+    }
+
+    private static long getTimeStamp(java.io.File)
+    {
+        java.io.File $r0;
+        long $l0;
+        byte $b1;
+
+        $r0 := @parameter0: java.io.File;
+
+        $l0 = virtualinvoke $r0.<java.io.File: long lastModified()>();
+
+        $b1 = $l0 cmp -1L;
+
+        if $b1 != 0 goto label1;
+
+        $l0 = $l0 - 1L;
+
+        return $l0;
+
+     label1:
+        return $l0;
+    }
+
+    private static long getZipCrc(java.io.File) throws java.io.IOException
+    {
+        java.io.File $r0;
+        long $l0;
+        byte $b1;
+
+        $r0 := @parameter0: java.io.File;
+
+        $l0 = staticinvoke <android.support.multidex.ZipUtil: long getZipCrc(java.io.File)>($r0);
+
+        $b1 = $l0 cmp -1L;
+
+        if $b1 != 0 goto label1;
+
+        $l0 = $l0 - 1L;
+
+        return $l0;
+
+     label1:
+        return $l0;
+    }
+
+    private static boolean isModified(android.content.Context, java.io.File, long)
+    {
+        android.content.Context $r0;
+        java.io.File $r1;
+        long $l0, $l1, $l2;
+        android.content.SharedPreferences $r2;
+        byte $b3;
+
+        $r0 := @parameter0: android.content.Context;
+
+        $r1 := @parameter1: java.io.File;
+
+        $l0 := @parameter2: long;
+
+        $r2 = staticinvoke <android.support.multidex.MultiDexExtractor: android.content.SharedPreferences getMultiDexPreferences(android.content.Context)>($r0);
+
+        $l1 = interfaceinvoke $r2.<android.content.SharedPreferences: long getLong(java.lang.String,long)>("timestamp", -1L);
+
+        $l2 = staticinvoke <android.support.multidex.MultiDexExtractor: long getTimeStamp(java.io.File)>($r1);
+
+        $b3 = $l1 cmp $l2;
+
+        if $b3 != 0 goto label1;
+
+        $l1 = interfaceinvoke $r2.<android.content.SharedPreferences: long getLong(java.lang.String,long)>("crc", -1L);
+
+        $b3 = $l1 cmp $l0;
+
+        if $b3 != 0 goto label1;
+
+        return 0;
+
+     label1:
+        return 1;
+    }
+
+    static java.util.List load(android.content.Context, android.content.pm.ApplicationInfo, java.io.File, boolean) throws java.io.IOException
+    {
+        android.content.Context $r0;
+        android.content.pm.ApplicationInfo $r1;
+        java.io.File $r2, $r4;
+        boolean $z0;
+        java.io.IOException $r3;
+        java.lang.StringBuilder $r5;
+        java.lang.String $r6;
+        long $l0, $l2;
+        java.util.List $r7, $r8;
+        int $i1;
+
+        $r0 := @parameter0: android.content.Context;
+
+        $r1 := @parameter1: android.content.pm.ApplicationInfo;
+
+        $r2 := @parameter2: java.io.File;
+
+        $z0 := @parameter3: boolean;
+
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>("MultiDexExtractor.load(");
+
+        $r6 = $r1.<android.content.pm.ApplicationInfo: java.lang.String sourceDir>;
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(", ");
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(boolean)>($z0);
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r6);
+
+        $r4 = new java.io.File;
+
+        $r6 = $r1.<android.content.pm.ApplicationInfo: java.lang.String sourceDir>;
+
+        specialinvoke $r4.<java.io.File: void <init>(java.lang.String)>($r6);
+
+        $l0 = staticinvoke <android.support.multidex.MultiDexExtractor: long getZipCrc(java.io.File)>($r4);
+
+        if $z0 != 0 goto label4;
+
+        $z0 = staticinvoke <android.support.multidex.MultiDexExtractor: boolean isModified(android.content.Context,java.io.File,long)>($r0, $r4, $l0);
+
+        if $z0 != 0 goto label4;
+
+     label1:
+        $r7 = staticinvoke <android.support.multidex.MultiDexExtractor: java.util.List loadExistingExtractions(android.content.Context,java.io.File,java.io.File)>($r0, $r4, $r2);
+
+     label2:
+        $r5 = new java.lang.StringBuilder;
+
+        specialinvoke $r5.<java.lang.StringBuilder: void <init>(java.lang.String)>("load found ");
+
+        $i1 = interfaceinvoke $r7.<java.util.List: int size()>();
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+
+        $r5 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" secondary dex files");
+
+        $r6 = virtualinvoke $r5.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r6);
+
+        return $r7;
+
+     label3:
+        $r3 := @caughtexception;
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", "Failed to reload existing extracted secondary dex files, falling back to fresh extraction", $r3);
+
+        $r8 = staticinvoke <android.support.multidex.MultiDexExtractor: java.util.List performExtractions(java.io.File,java.io.File)>($r4, $r2);
+
+        $r7 = $r8;
+
+        $l2 = staticinvoke <android.support.multidex.MultiDexExtractor: long getTimeStamp(java.io.File)>($r4);
+
+        $i1 = interfaceinvoke $r8.<java.util.List: int size()>();
+
+        $i1 = $i1 + 1;
+
+        staticinvoke <android.support.multidex.MultiDexExtractor: void putStoredApkInfo(android.content.Context,long,long,int)>($r0, $l2, $l0, $i1);
+
+        goto label2;
+
+     label4:
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", "Detected that extraction must be performed.");
+
+        $r8 = staticinvoke <android.support.multidex.MultiDexExtractor: java.util.List performExtractions(java.io.File,java.io.File)>($r4, $r2);
+
+        $r7 = $r8;
+
+        $l2 = staticinvoke <android.support.multidex.MultiDexExtractor: long getTimeStamp(java.io.File)>($r4);
+
+        $i1 = interfaceinvoke $r8.<java.util.List: int size()>();
+
+        $i1 = $i1 + 1;
+
+        staticinvoke <android.support.multidex.MultiDexExtractor: void putStoredApkInfo(android.content.Context,long,long,int)>($r0, $l2, $l0, $i1);
+
+        goto label2;
+
+        catch java.io.IOException from label1 to label2 with label3;
+    }
+
+    private static java.util.List loadExistingExtractions(android.content.Context, java.io.File, java.io.File) throws java.io.IOException
+    {
+        android.content.Context $r0;
+        java.io.File $r1, $r2;
+        java.util.ArrayList $r3;
+        java.lang.StringBuilder $r4;
+        java.lang.String $r5, $r7;
+        android.content.SharedPreferences $r6;
+        int $i0, $i1;
+        boolean $z0;
+        java.io.IOException $r8;
+
+        $r0 := @parameter0: android.content.Context;
+
+        $r1 := @parameter1: java.io.File;
+
+        $r2 := @parameter2: java.io.File;
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", "loading existing secondary dex files");
+
+        $r4 = new java.lang.StringBuilder;
+
+        $r5 = virtualinvoke $r1.<java.io.File: java.lang.String getName()>();
+
+        $r5 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r5);
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r5);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".classes");
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r6 = staticinvoke <android.support.multidex.MultiDexExtractor: android.content.SharedPreferences getMultiDexPreferences(android.content.Context)>($r0);
+
+        $i0 = interfaceinvoke $r6.<android.content.SharedPreferences: int getInt(java.lang.String,int)>("dex.number", 1);
+
+        $r3 = new java.util.ArrayList;
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>(int)>($i0);
+
+        $i1 = 2;
+
+     label1:
+        if $i1 <= $i0 goto label2;
+
+        return $r3;
+
+     label2:
+        $r4 = new java.lang.StringBuilder;
+
+        $r7 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r5);
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r7);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i1);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".zip");
+
+        $r7 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r1 = new java.io.File;
+
+        specialinvoke $r1.<java.io.File: void <init>(java.io.File,java.lang.String)>($r2, $r7);
+
+        $z0 = virtualinvoke $r1.<java.io.File: boolean isFile()>();
+
+        if $z0 == 0 goto label3;
+
+        interfaceinvoke $r3.<java.util.List: boolean add(java.lang.Object)>($r1);
+
+        $z0 = staticinvoke <android.support.multidex.MultiDexExtractor: boolean verifyZipFile(java.io.File)>($r1);
+
+        if $z0 != 0 goto label4;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Invalid zip file: ");
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r1);
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r5);
+
+        $r8 = new java.io.IOException;
+
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>("Invalid ZIP file.");
+
+        throw $r8;
+
+     label3:
+        $r8 = new java.io.IOException;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Missing extracted secondary dex file \'");
+
+        $r5 = virtualinvoke $r1.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r5);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>($r5);
+
+        throw $r8;
+
+     label4:
+        $i1 = $i1 + 1;
+
+        goto label1;
+    }
+
+    private static java.util.List performExtractions(java.io.File, java.io.File) throws java.io.IOException
+    {
+        java.io.File $r0, $r1;
+        java.util.zip.ZipFile $r2;
+        java.util.ArrayList $r3;
+        java.lang.StringBuilder $r4;
+        java.lang.String $r5, $r6;
+        int $i0, $i1;
+        java.util.zip.ZipEntry $r7;
+        boolean $z0, $z1;
+        java.io.IOException $r8, $r10;
+        java.lang.Throwable $r9;
+        long $l2;
+
+        $r0 := @parameter0: java.io.File;
+
+        $r1 := @parameter1: java.io.File;
+
+        $r4 = new java.lang.StringBuilder;
+
+        $r5 = virtualinvoke $r0.<java.io.File: java.lang.String getName()>();
+
+        $r5 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r5);
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r5);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".classes");
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.support.multidex.MultiDexExtractor: void prepareDexDir(java.io.File,java.lang.String)>($r1, $r5);
+
+        $r3 = new java.util.ArrayList;
+
+        specialinvoke $r3.<java.util.ArrayList: void <init>()>();
+
+        $r2 = new java.util.zip.ZipFile;
+
+        specialinvoke $r2.<java.util.zip.ZipFile: void <init>(java.io.File)>($r0);
+
+        $i0 = 2;
+
+     label01:
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("classes");
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>(2);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".dex");
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r7 = virtualinvoke $r2.<java.util.zip.ZipFile: java.util.zip.ZipEntry getEntry(java.lang.String)>($r6);
+
+     label02:
+        if $r7 != null goto label05;
+
+     label03:
+        virtualinvoke $r2.<java.util.zip.ZipFile: void close()>();
+
+     label04:
+        return $r3;
+
+     label05:
+        $r4 = new java.lang.StringBuilder;
+
+        $r6 = staticinvoke <java.lang.String: java.lang.String valueOf(java.lang.Object)>($r5);
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>($r6);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".zip");
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r0 = new java.io.File;
+
+        specialinvoke $r0.<java.io.File: void <init>(java.io.File,java.lang.String)>($r1, $r6);
+
+        interfaceinvoke $r3.<java.util.List: boolean add(java.lang.Object)>($r0);
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Extraction is needed for file ");
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.Object)>($r0);
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r6);
+
+     label06:
+        $i1 = 0;
+
+        $z0 = 0;
+
+     label07:
+        if $i1 >= 3 goto label08;
+
+        if $z0 == 0 goto label12;
+
+     label08:
+        if $z0 != 0 goto label20;
+
+        $r8 = new java.io.IOException;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Could not create zip file ");
+
+        $r5 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r5);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" for secondary dex (");
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(")");
+
+        $r5 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r8.<java.io.IOException: void <init>(java.lang.String)>($r5);
+
+        throw $r8;
+
+     label09:
+        $r9 := @caughtexception;
+
+     label10:
+        virtualinvoke $r2.<java.util.zip.ZipFile: void close()>();
+
+     label11:
+        throw $r9;
+
+     label12:
+        $i1 = $i1 + 1;
+
+     label13:
+        staticinvoke <android.support.multidex.MultiDexExtractor: void extract(java.util.zip.ZipFile,java.util.zip.ZipEntry,java.io.File,java.lang.String)>($r2, $r7, $r0, $r5);
+
+        $z1 = staticinvoke <android.support.multidex.MultiDexExtractor: boolean verifyZipFile(java.io.File)>($r0);
+
+        $z0 = $z1;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Extraction ");
+
+     label14:
+        if $z1 == 0 goto label18;
+
+     label15:
+        $r6 = "success";
+
+     label16:
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" - length ");
+
+        $r6 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(": ");
+
+        $l2 = virtualinvoke $r0.<java.io.File: long length()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l2);
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r6);
+
+        if $z1 != 0 goto label07;
+
+        virtualinvoke $r0.<java.io.File: boolean delete()>();
+
+        $z1 = virtualinvoke $r0.<java.io.File: boolean exists()>();
+
+        if $z1 == 0 goto label07;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to delete corrupted secondary dex \'");
+
+        $r6 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r6);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>("\'");
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String)>("MultiDex", $r6);
+
+     label17:
+        goto label07;
+
+     label18:
+        $r6 = "failed";
+
+     label19:
+        goto label16;
+
+     label20:
+        $i0 = $i0 + 1;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("classes");
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(int)>($i0);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(".dex");
+
+        $r6 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        $r7 = virtualinvoke $r2.<java.util.zip.ZipFile: java.util.zip.ZipEntry getEntry(java.lang.String)>($r6);
+
+     label21:
+        goto label02;
+
+     label22:
+        $r8 := @caughtexception;
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", "Failed to close resource", $r8);
+
+        goto label11;
+
+     label23:
+        $r10 := @caughtexception;
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", "Failed to close resource", $r10);
+
+        return $r3;
+
+        catch java.lang.Throwable from label01 to label02 with label09;
+        catch java.io.IOException from label03 to label04 with label23;
+        catch java.lang.Throwable from label05 to label06 with label09;
+        catch java.lang.Throwable from label08 to label09 with label09;
+        catch java.io.IOException from label10 to label11 with label22;
+        catch java.lang.Throwable from label13 to label14 with label09;
+        catch java.lang.Throwable from label15 to label17 with label09;
+        catch java.lang.Throwable from label19 to label21 with label09;
+    }
+
+    private static void prepareDexDir(java.io.File, java.lang.String) throws java.io.IOException
+    {
+        java.io.File $r0;
+        java.lang.String $r1;
+        android.support.multidex.MultiDexExtractor$1 $r2;
+        boolean $z0;
+        java.io.IOException $r3;
+        java.lang.StringBuilder $r4;
+        java.io.File[] $r5;
+        int $i0, $i1;
+        long $l2;
+
+        $r0 := @parameter0: java.io.File;
+
+        $r1 := @parameter1: java.lang.String;
+
+        virtualinvoke $r0.<java.io.File: boolean mkdirs()>();
+
+        $z0 = virtualinvoke $r0.<java.io.File: boolean isDirectory()>();
+
+        if $z0 != 0 goto label1;
+
+        $r3 = new java.io.IOException;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to create dex directory ");
+
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+
+        $r1 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        specialinvoke $r3.<java.io.IOException: void <init>(java.lang.String)>($r1);
+
+        throw $r3;
+
+     label1:
+        $r2 = new android.support.multidex.MultiDexExtractor$1;
+
+        specialinvoke $r2.<android.support.multidex.MultiDexExtractor$1: void <init>(java.lang.String)>($r1);
+
+        $r5 = virtualinvoke $r0.<java.io.File: java.io.File[] listFiles(java.io.FileFilter)>($r2);
+
+        if $r5 != null goto label2;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to list secondary dex dir content (");
+
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(").");
+
+        $r1 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String)>("MultiDex", $r1);
+
+        return;
+
+     label2:
+        $i0 = lengthof $r5;
+
+        $i1 = 0;
+
+     label3:
+        if $i1 >= $i0 goto label6;
+
+        $r0 = $r5[$i1];
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Trying to delete old file ");
+
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" of size ");
+
+        $l2 = virtualinvoke $r0.<java.io.File: long length()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(long)>($l2);
+
+        $r1 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r1);
+
+        $z0 = virtualinvoke $r0.<java.io.File: boolean delete()>();
+
+        if $z0 != 0 goto label5;
+
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to delete old file ");
+
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+
+        $r1 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String)>("MultiDex", $r1);
+
+     label4:
+        $i1 = $i1 + 1;
+
+        goto label3;
+
+     label5:
+        $r4 = new java.lang.StringBuilder;
+
+        specialinvoke $r4.<java.lang.StringBuilder: void <init>(java.lang.String)>("Deleted old file ");
+
+        $r1 = virtualinvoke $r0.<java.io.File: java.lang.String getPath()>();
+
+        $r4 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r1);
+
+        $r1 = virtualinvoke $r4.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int i(java.lang.String,java.lang.String)>("MultiDex", $r1);
+
+        goto label4;
+
+     label6:
+        return;
+    }
+
+    private static void putStoredApkInfo(android.content.Context, long, long, int)
+    {
+        android.content.Context $r0;
+        long $l0, $l1;
+        int $i2;
+        android.content.SharedPreferences $r1;
+        android.content.SharedPreferences$Editor $r2;
+
+        $r0 := @parameter0: android.content.Context;
+
+        $l0 := @parameter1: long;
+
+        $l1 := @parameter2: long;
+
+        $i2 := @parameter3: int;
+
+        $r1 = staticinvoke <android.support.multidex.MultiDexExtractor: android.content.SharedPreferences getMultiDexPreferences(android.content.Context)>($r0);
+
+        $r2 = interfaceinvoke $r1.<android.content.SharedPreferences: android.content.SharedPreferences$Editor edit()>();
+
+        interfaceinvoke $r2.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putLong(java.lang.String,long)>("timestamp", $l0);
+
+        interfaceinvoke $r2.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putLong(java.lang.String,long)>("crc", $l1);
+
+        interfaceinvoke $r2.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putInt(java.lang.String,int)>("dex.number", $i2);
+
+        staticinvoke <android.support.multidex.MultiDexExtractor: void apply(android.content.SharedPreferences$Editor)>($r2);
+
+        return;
+    }
+
+    static boolean verifyZipFile(java.io.File)
+    {
+        java.io.File $r0;
+        java.io.IOException $r1, $r6;
+        java.util.zip.ZipFile $r2;
+        java.lang.StringBuilder $r3;
+        java.lang.String $r4;
+        java.util.zip.ZipException $r5;
+
+        $r0 := @parameter0: java.io.File;
+
+        $r2 = new java.util.zip.ZipFile;
+
+     label1:
+        specialinvoke $r2.<java.util.zip.ZipFile: void <init>(java.io.File)>($r0);
+
+     label2:
+        virtualinvoke $r2.<java.util.zip.ZipFile: void close()>();
+
+     label3:
+        return 1;
+
+     label4:
+        $r1 := @caughtexception;
+
+        $r3 = new java.lang.StringBuilder;
+
+     label5:
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>("Failed to close zip file: ");
+
+        $r4 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r3 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r4);
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String)>("MultiDex", $r4);
+
+     label6:
+        return 0;
+
+     label7:
+        $r5 := @caughtexception;
+
+        $r3 = new java.lang.StringBuilder;
+
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>("File ");
+
+        $r4 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r3 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r4);
+
+        $r3 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>(" is not a valid zip file.");
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", $r4, $r5);
+
+        goto label6;
+
+     label8:
+        $r6 := @caughtexception;
+
+        $r3 = new java.lang.StringBuilder;
+
+        specialinvoke $r3.<java.lang.StringBuilder: void <init>(java.lang.String)>("Got an IOException trying to open zip file: ");
+
+        $r4 = virtualinvoke $r0.<java.io.File: java.lang.String getAbsolutePath()>();
+
+        $r3 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.StringBuilder append(java.lang.String)>($r4);
+
+        $r4 = virtualinvoke $r3.<java.lang.StringBuilder: java.lang.String toString()>();
+
+        staticinvoke <android.util.Log: int w(java.lang.String,java.lang.String,java.lang.Throwable)>("MultiDex", $r4, $r6);
+
+        goto label6;
+
+        catch java.util.zip.ZipException from label1 to label2 with label7;
+        catch java.io.IOException from label1 to label2 with label8;
+        catch java.io.IOException from label2 to label3 with label4;
+        catch java.util.zip.ZipException from label5 to label6 with label7;
+        catch java.io.IOException from label5 to label6 with label8;
+    }
+}

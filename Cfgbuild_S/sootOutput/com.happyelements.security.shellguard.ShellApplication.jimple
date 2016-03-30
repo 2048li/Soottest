@@ -1,0 +1,188 @@
+public class com.happyelements.security.shellguard.ShellApplication extends android.app.Application
+{
+    public static final java.lang.String DEX_VERSION_FILENAME;
+    private static final java.lang.String TAG;
+    private android.content.pm.ApplicationInfo ai;
+    private dalvik.system.DexClassLoader classLoader;
+    private java.lang.Object wrapper;
+    private java.lang.Class wrapperClass;
+
+    static void <clinit>()
+    {
+        <com.happyelements.security.shellguard.ShellApplication: java.lang.String TAG> = "ShellApplication";
+
+        <com.happyelements.security.shellguard.ShellApplication: java.lang.String DEX_VERSION_FILENAME> = "dexVersion";
+
+        staticinvoke <java.lang.System: void loadLibrary(java.lang.String)>("mem");
+
+        return;
+    }
+
+    public void <init>()
+    {
+        com.happyelements.security.shellguard.ShellApplication $r0;
+
+        $r0 := @this: com.happyelements.security.shellguard.ShellApplication;
+
+        specialinvoke $r0.<android.app.Application: void <init>()>();
+
+        return;
+    }
+
+    private void loadDex() throws java.lang.ReflectiveOperationException
+    {
+        com.happyelements.security.shellguard.ShellApplication $r0;
+        android.content.pm.ApplicationInfo $r1;
+        android.os.Bundle $r2;
+        java.lang.Object $r3;
+        java.lang.String $r4;
+        java.lang.Class $r5;
+        java.lang.Class[] $r6;
+        java.lang.reflect.Constructor $r7;
+        java.lang.Object[] $r8;
+        java.lang.reflect.Method $r9;
+        java.lang.ClassLoader $r10;
+
+        $r0 := @this: com.happyelements.security.shellguard.ShellApplication;
+
+        $r1 = $r0.<com.happyelements.security.shellguard.ShellApplication: android.content.pm.ApplicationInfo ai>;
+
+        $r2 = $r1.<android.content.pm.ApplicationInfo: android.os.Bundle metaData>;
+
+        $r3 = virtualinvoke $r2.<android.os.Bundle: java.lang.Object get(java.lang.String)>("HE_APP_WRAPPER");
+
+        $r4 = (java.lang.String) $r3;
+
+        $r5 = staticinvoke <java.lang.Class: java.lang.Class forName(java.lang.String)>($r4);
+
+        $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Class wrapperClass> = $r5;
+
+        $r5 = $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Class wrapperClass>;
+
+        $r6 = newarray (java.lang.Class)[1];
+
+        $r6[0] = class "android/app/Application";
+
+        $r7 = virtualinvoke $r5.<java.lang.Class: java.lang.reflect.Constructor getConstructor(java.lang.Class[])>($r6);
+
+        $r8 = newarray (java.lang.Object)[1];
+
+        $r8[0] = $r0;
+
+        $r3 = virtualinvoke $r7.<java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>($r8);
+
+        $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Object wrapper> = $r3;
+
+        $r5 = $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Class wrapperClass>;
+
+        $r6 = newarray (java.lang.Class)[1];
+
+        $r6[0] = class "android/content/Context";
+
+        $r9 = virtualinvoke $r5.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("attachBaseContext", $r6);
+
+        $r3 = $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Object wrapper>;
+
+        $r8 = newarray (java.lang.Object)[1];
+
+        $r8[0] = $r0;
+
+        virtualinvoke $r9.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>($r3, $r8);
+
+        $r10 = virtualinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.ClassLoader getClassLoader()>();
+
+        specialinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: void regGameJni(java.lang.ClassLoader)>($r10);
+
+        return;
+    }
+
+    private native void loadElfFile(android.content.res.AssetManager);
+
+    private native void regGameJni(java.lang.ClassLoader);
+
+    protected void attachBaseContext(android.content.Context)
+    {
+        com.happyelements.security.shellguard.ShellApplication $r0;
+        android.content.Context $r1;
+        java.lang.Exception $r2;
+        android.content.res.AssetManager $r3;
+        android.content.pm.PackageManager $r4;
+        java.lang.String $r5;
+        android.content.pm.ApplicationInfo $r6;
+
+        $r0 := @this: com.happyelements.security.shellguard.ShellApplication;
+
+        $r1 := @parameter0: android.content.Context;
+
+        specialinvoke $r0.<android.app.Application: void attachBaseContext(android.content.Context)>($r1);
+
+        $r3 = virtualinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: android.content.res.AssetManager getAssets()>();
+
+        specialinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: void loadElfFile(android.content.res.AssetManager)>($r3);
+
+     label1:
+        $r4 = virtualinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: android.content.pm.PackageManager getPackageManager()>();
+
+        $r5 = virtualinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.String getPackageName()>();
+
+        $r6 = virtualinvoke $r4.<android.content.pm.PackageManager: android.content.pm.ApplicationInfo getApplicationInfo(java.lang.String,int)>($r5, 128);
+
+        $r0.<com.happyelements.security.shellguard.ShellApplication: android.content.pm.ApplicationInfo ai> = $r6;
+
+        staticinvoke <android.support.multidex.MultiDex: void install(android.content.Context)>($r0);
+
+        specialinvoke $r0.<com.happyelements.security.shellguard.ShellApplication: void loadDex()>();
+
+     label2:
+        return;
+
+     label3:
+        $r2 := @caughtexception;
+
+        staticinvoke <android.util.Log: int e(java.lang.String,java.lang.String,java.lang.Throwable)>("ShellApplication", "Unable to call attachBaseContext", $r2);
+
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+
+    public void onCreate()
+    {
+        com.happyelements.security.shellguard.ShellApplication $r0;
+        java.lang.Exception $r1;
+        java.lang.reflect.Method $r2;
+        java.lang.Class $r3;
+        java.lang.Class[] $r4;
+        java.lang.Object $r5;
+        java.lang.Object[] $r6;
+
+        $r0 := @this: com.happyelements.security.shellguard.ShellApplication;
+
+        specialinvoke $r0.<android.app.Application: void onCreate()>();
+
+     label1:
+        $r3 = $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Class wrapperClass>;
+
+        $r4 = newarray (java.lang.Class)[0];
+
+        $r2 = virtualinvoke $r3.<java.lang.Class: java.lang.reflect.Method getMethod(java.lang.String,java.lang.Class[])>("onCreate", $r4);
+
+        $r5 = $r0.<com.happyelements.security.shellguard.ShellApplication: java.lang.Object wrapper>;
+
+        $r6 = newarray (java.lang.Object)[0];
+
+        virtualinvoke $r2.<java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>($r5, $r6);
+
+     label2:
+        return;
+
+     label3:
+        $r1 := @caughtexception;
+
+        staticinvoke <android.util.Log: int e(java.lang.String,java.lang.String,java.lang.Throwable)>("ShellApplication", "Unable to call wrapper onCreate", $r1);
+
+        return;
+
+        catch java.lang.Exception from label1 to label2 with label3;
+    }
+}
