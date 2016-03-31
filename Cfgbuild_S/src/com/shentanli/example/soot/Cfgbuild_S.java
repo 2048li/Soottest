@@ -37,7 +37,8 @@ public class Cfgbuild_S {
 		Scene.v().addBasicClass("java.lang.System",SootClass.SIGNATURES);
 		
 		
-		//the must one
+
+		//the must one ---this is used to plug in 
 		PackManager.v().getPack("jtp").add(new Transform("jtp.myInstrumenter", new BodyTransformer(){
 			@SuppressWarnings("rawtypes")
 			@Override

@@ -7,12 +7,19 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 
 import soot.Body;
 import soot.BodyTransformer;
+import soot.Local;
+import soot.PatchingChain;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
 import soot.ValueBox;
+import soot.jimple.AbstractStmtSwitch;
+import soot.jimple.InvokeExpr;
+import soot.jimple.InvokeStmt;
+import soot.jimple.Jimple;
+import soot.jimple.StringConstant;
 
 public class MyAnalysis extends BodyTransformer{
 
@@ -41,14 +48,17 @@ public class MyAnalysis extends BodyTransformer{
 						System.out.println("boxvalue ---"+tmp);
 					} */
 					String valuename = "pm install";
-					String methodname = "getRuntime";
+					String methodname = "exec";
 					boolean l1 = judgestrvalue(valuename, b);
 					boolean l2 = judgemethod(methodname, b);
 						
-						if (l1 && l2)
+					/*	if (l1 && l2)
 						{
 							System.out.println("both pminstall and getruntime body");
 						}
+						*/
+					if (l2)
+						System.out.println("getruntime method");
 					}
 					
 	
@@ -66,12 +76,11 @@ public class MyAnalysis extends BodyTransformer{
 			Unit u = i.next();
 			List usebox = u.getUseAndDefBoxes();
 			int len = usebox.size();
-			String substr2 = "pm install";
 				for (int count = 0;count<len;count++)
 				{
-					if (usebox.get(count).toString().indexOf(substr2) != -1){
+					if (usebox.get(count).toString().indexOf(valuename) != -1){
 						result = true;
-					    System.out.println("also contains pm install--"+usebox.get(count));	
+					    System.out.println("---contains pm install--"+usebox.get(count));	
 					}
 						
 				}
@@ -112,13 +121,16 @@ public class MyAnalysis extends BodyTransformer{
 		
 		if (u.toString().indexOf(methodname) != -1)
 		{
-			System.out.println("unit contains method"+u.toString());  
+			System.out.println("***unit contains method"+u.toString());  
 			result = true;
 			
 		}
-		else
-			System.out.println("no the method you search");
+		//else
+		//	System.out.println("no the method you search");
 		return result;
+		
+		
+		//another way
 		
 	}
 	
