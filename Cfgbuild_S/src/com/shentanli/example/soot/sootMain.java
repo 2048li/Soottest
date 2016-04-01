@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import soot.Body;
+import soot.MethodOrMethodContext;
 import soot.PackManager;
 import soot.Scene;
 import soot.SootClass;
@@ -40,6 +43,7 @@ public class sootMain {
 		Options.v().set_force_android_jar(androidJAR);
 		Options.v().set_src_prec(Options.src_prec_apk);
 		Options.v().set_soot_classpath(androidJAR);
+		Options.v().set_whole_program(true);
 		
 		//Scene.v().addBasicClass(android.widget.TextView,BODIES);
 		Scene.v().loadNecessaryClasses();
@@ -53,11 +57,14 @@ public class sootMain {
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
+		PackManager.v().runPacks();
 		String methodname = "getRuntime";
 		getgh(methodname);
 		System.out.println("done");
-		//PackManager.v().runPacks();
+		
 		//PackManager.v().writeOutput();
+	//	PackManager.v().getPack("cg").apply();
+	//	PackManager.v().getPack("wjtp").apply();
 		
 		//soot.Main.main(args);
 	}
@@ -77,41 +84,37 @@ public class sootMain {
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
 					System.out.println("method---"+m.toString());
-				/*	if ( m.getActiveBody().getUnits().isEmpty() == false) {
+					if ( m.getActiveBody().getUnits().isEmpty() == false) {
 					List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
 					int len = u.size();
 					for (int i = 0;i<len;i++)
 						System.out.println("the box---"+u.get(i).toString());
-					}*/
+					}
 			}
+			//Scene.v().setEntryPoints(tmpent);
 		}
-		//System.out.println("-----to get the graph---");
-	/*	System.out.println("now to set entrypoint");
+		//System.out.println("-----to get the graph---");	
 		
-		Scene.v().setEntryPoints(tmpent);
-		
-		PackManager.v().getPack("cg").apply();
-		PackManager.v().getPack("wjtp").apply();
-		
-		System.out.println("next to call graph");  */
-	/*	@SuppressWarnings("unused")
+		System.out.println("next to call graph");  
+		@SuppressWarnings("unused")
 		CallGraph cg = Scene.v().getCallGraph();
+		java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
+		System.out.println("method context ----"+tt.toString());
+
+	    
 		System.out.println("to show the graph");
 		if (cg.iterator().hasNext())
 		{
+			
 			System.out.println("in the showing method");
 			Edge e = cg.iterator().next();
 			Body b = e.src().getActiveBody();
 			internalTransform(b,methodname);
 		}
-	*/	
+	
 		
 	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
-	    
-		
-		
-		
-		
+	
 		
 	}
 	
@@ -119,7 +122,8 @@ public class sootMain {
 	protected static void internalTransform(Body body,String name){
 		SootMethod method = body.getMethod();
 /*		if (method.getName().equals(name) == false) // replace the methodname with the name u want to analysis
-		{
+		{MethodOrMethodContext lll = tt.next(); 
+		System.out.println("methodorcmethodcontext ---"+lll.toString());
 			System.out.println("method name --"+method.getName().toString()) ;
 		}
 		*/
