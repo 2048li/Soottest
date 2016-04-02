@@ -7,15 +7,7 @@ import java.util.Map;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
-import soot.Body;
-import soot.MethodOrMethodContext;
-import soot.PackManager;
-import soot.Scene;
-import soot.SootClass;
-import soot.SootMethod;
-import soot.Transform;
-import soot.Unit;
-import soot.UnitBox;
+import soot.*;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
@@ -26,11 +18,13 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
 	//private final static String androidJAR = "android.jar";
-	private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	//private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/xiaoxiaole.apk";
-	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+	private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
 	public static void inialiseSoot()
 	{
 		if (SOOT_INITIALIZED)
@@ -85,10 +79,16 @@ public class sootMain {
 					tmpent.add(m);	
 					System.out.println("method---"+m.toString());
 					if ( m.getActiveBody().getUnits().isEmpty() == false) {
-					List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
-					int len = u.size();
-					for (int i = 0;i<len;i++)
-						System.out.println("the box---"+u.get(i).toString());
+						List<ValueBox> value = m.getActiveBody().getDefBoxes();
+						List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
+						int len = u.size();
+						int len1 = value.size();
+						int i;
+
+						for (i= 0; i<len1;i++)
+							System.out.println("the value--" + value.get(i).toString());
+						for (i = 0; i < len; i++)
+						System.out.println("the box---" + u.get(i).toString());
 					}
 			}
 			//Scene.v().setEntryPoints(tmpent);
