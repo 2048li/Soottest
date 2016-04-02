@@ -18,13 +18,13 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
 	//private final static String androidJAR = "android.jar";
-	//private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
-	private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	//private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/xiaoxiaole.apk";
-	private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
-	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
 	public static void inialiseSoot()
 	{
 		if (SOOT_INITIALIZED)
@@ -51,6 +51,7 @@ public class sootMain {
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
+		PackManager.v().getPack("wjtp").apply();
 		PackManager.v().runPacks();
 		String methodname = "getRuntime";
 		getgh(methodname);
@@ -78,24 +79,33 @@ public class sootMain {
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
 					System.out.println("method---"+m.toString());
+					String sig = m.getSignature();
+					System.out.println("the signature of method---"+sig);
 					if ( m.getActiveBody().getUnits().isEmpty() == false) {
 						List<ValueBox> value = m.getActiveBody().getDefBoxes();
-						List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
-						int len = u.size();
+					//	List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
+						java.util.Iterator<Unit> u = m.getActiveBody().getUnits().snapshotIterator();
+						//int len = u.size();
+						
 						int len1 = value.size();
 						int i;
 
 						for (i= 0; i<len1;i++)
-							System.out.println("the value--" + value.get(i).toString());
-						for (i = 0; i < len; i++)
-						System.out.println("the box---" + u.get(i).toString());
+						{
+							if (value.get(i).toString().contains("install"))
+						    	System.out.println("the value--" + value.get(i).toString());
+						}
+						/* for (i = 0; i < len; i++)
+					     	System.out.println("the box---" + u.get(i).toString());*/
+						if(u.hasNext())
+							System.out.println("the unit---" + u.toString());
 					}
 			}
 			//Scene.v().setEntryPoints(tmpent);
 		}
 		//System.out.println("-----to get the graph---");	
 		
-		System.out.println("next to call graph");  
+	/*	System.out.println("next to call graph");  
 		@SuppressWarnings("unused")
 		CallGraph cg = Scene.v().getCallGraph();
 		java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
@@ -111,6 +121,7 @@ public class sootMain {
 			Body b = e.src().getActiveBody();
 			internalTransform(b,methodname);
 		}
+		*/
 	
 		
 	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
