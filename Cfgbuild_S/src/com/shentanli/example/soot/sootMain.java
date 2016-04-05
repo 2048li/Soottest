@@ -16,6 +16,7 @@ import soot.SootMethod;
 import soot.Transform;
 import soot.Unit;
 import soot.UnitBox;
+import soot.jimple.Stmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
@@ -98,15 +99,35 @@ public class sootMain {
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
 
-					System.out.println("method---"+m.toString());
-					if ( m.getActiveBody().getUnits().isEmpty() == false) {
-					List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
-					int len = u.size();
+				//	System.out.println("method---"+m.toString());
+					if (m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
+					//List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
+						for (java.util.Iterator<Unit> uit = m.getActiveBody().getUnits().iterator();uit.hasNext();)
+						{
+						    Stmt s = (Stmt) uit.next();
+						    System.out.println("from stmt all-----"+s.toString());
+						    if (s.toString().contains("install"))
+						    {
+						    	List<UnitBox> pu = s.getBoxesPointingToThis();
+						    	for (int p = 0;p<pu.size();p++)
+						    		System.out.println("the unitbox pointing to installstr"+pu.toString());
+						    	
+						    }
+						    
+							if (s.containsInvokeExpr())
+							{
+								//System.out.println("from stmt--"+s.toString());
+							}
+							
+						}
+						System.out.println("stmt done----");
+				/*	int len = u.size();
 					for (int i = 0;i<len;i++)
 						System.out.println("the box---"+u.get(i).toString());
+					}*/
 
 			//		System.out.println("method---"+m.toString());
-					String sig = m.getSignature();
+		//			String sig = m.getSignature();
 			//		System.out.println("the signature of method---"+sig);
 					
 					/*Class<? extends SootMethod> classname = m.getClass();
@@ -137,6 +158,11 @@ public class sootMain {
 				//				System.setOut(out);
 								
 								System.out.println("!!!getuseanddefboxes---**"+tmp2.get(tc).toString());
+								
+								if (tmp2.get(tc).toString().contains("install"))
+								{
+								
+								}
 			//				}
 							
 			//				}
@@ -167,9 +193,10 @@ public class sootMain {
 			}
 			//Scene.v().setEntryPoints(tmpent);
 		}
+	}
 		//System.out.println("-----to get the graph---");	
 		
-		System.out.println("next to call graph");  
+	/*	System.out.println("next to call graph");  
 		@SuppressWarnings("unused")
 		CallGraph cg = Scene.v().getCallGraph();
 		java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
@@ -184,14 +211,14 @@ public class sootMain {
 			Edge e = cg.iterator().next();
 			Body b = e.src().getActiveBody();
 			internalTransform(b,methodname);
-		}
+		}*/
 	
 		
 	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
 	
 		
 	}
-	}
+	
 	
 	
 	protected static void internalTransform(Body body,String name){
