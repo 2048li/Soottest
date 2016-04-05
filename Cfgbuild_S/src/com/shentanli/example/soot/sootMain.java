@@ -26,20 +26,20 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
 	//private final static String androidJAR = "android.jar";
-<<<<<<< HEAD
-	private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+
+	//private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/xiaoxiaole.apk";
-	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
-=======
+	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+
 	private final static String androidJAR = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
 	private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
->>>>>>> backup
+
 	public static void inialiseSoot()
 	{
 		if (SOOT_INITIALIZED)
@@ -66,11 +66,10 @@ public class sootMain {
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
-<<<<<<< HEAD
-=======
+
 		System.out.println("now to run packmanager.apply");
 		PackManager.v().getPack("wjtp").apply();
->>>>>>> backup
+
 		PackManager.v().runPacks();
 		String methodname = "getRuntime";
 		System.out.println("now to go to getgh mtehod");
@@ -98,14 +97,14 @@ public class sootMain {
 			for (SootMethod m:c.getMethods()){
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
-<<<<<<< HEAD
+
 					System.out.println("method---"+m.toString());
 					if ( m.getActiveBody().getUnits().isEmpty() == false) {
 					List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
 					int len = u.size();
 					for (int i = 0;i<len;i++)
 						System.out.println("the box---"+u.get(i).toString());
-=======
+
 			//		System.out.println("method---"+m.toString());
 					String sig = m.getSignature();
 			//		System.out.println("the signature of method---"+sig);
@@ -163,7 +162,7 @@ public class sootMain {
 						
 							}*/
 						    
->>>>>>> backup
+
 					}
 			}
 			//Scene.v().setEntryPoints(tmpent);
@@ -191,6 +190,7 @@ public class sootMain {
 	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
 	
 		
+	}
 	}
 	
 	
