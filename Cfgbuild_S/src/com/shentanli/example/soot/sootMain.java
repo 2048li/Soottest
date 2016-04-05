@@ -26,11 +26,20 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
 	//private final static String androidJAR = "android.jar";
+<<<<<<< HEAD
 	private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/xiaoxiaole.apk";
 	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+=======
+	private final static String androidJAR = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	//private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	//private String force_android_jar = "android.jar";
+	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
+	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
+	private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
+>>>>>>> backup
 	public static void inialiseSoot()
 	{
 		if (SOOT_INITIALIZED)
@@ -57,8 +66,14 @@ public class sootMain {
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
+<<<<<<< HEAD
+=======
+		System.out.println("now to run packmanager.apply");
+		PackManager.v().getPack("wjtp").apply();
+>>>>>>> backup
 		PackManager.v().runPacks();
 		String methodname = "getRuntime";
+		System.out.println("now to go to getgh mtehod");
 		getgh(methodname);
 		System.out.println("done");
 		
@@ -83,12 +98,72 @@ public class sootMain {
 			for (SootMethod m:c.getMethods()){
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
+<<<<<<< HEAD
 					System.out.println("method---"+m.toString());
 					if ( m.getActiveBody().getUnits().isEmpty() == false) {
 					List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
 					int len = u.size();
 					for (int i = 0;i<len;i++)
 						System.out.println("the box---"+u.get(i).toString());
+=======
+			//		System.out.println("method---"+m.toString());
+					String sig = m.getSignature();
+			//		System.out.println("the signature of method---"+sig);
+					
+					/*Class<? extends SootMethod> classname = m.getClass();
+					System.out.println("class of sootmethod:"+classname.getName());
+					System.out.println("the classloader of the last class:"+classname.getClassLoader().toString());*/
+					
+					if ( m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
+						
+						List<UnitBox> tmp1 = m.getActiveBody().getAllUnitBoxes();
+			//			for (int tc = 0; tc<tmp1.size(); tc++)
+			//				System.out.println("----getallunitboxes---:"+tmp1.get(tc).toString());
+						List tmp2 = m.getActiveBody().getUseAndDefBoxes();
+						for (int tc=0; tc<tmp2.size();tc++)
+							//if (tmp2.get(tc).equals("runtime")) 
+						{
+					//		if (tmp2.get(tc).getClass().getName().equalsIgnoreCase(c1) || tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2) || 
+					//				tmp2.get(tc).getClass().getName().equalsIgnoreCase(c3) )
+					//		if(tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2))
+				//			{				
+							//System.out.println("the classname from the use&defboxes###---"+tmp2.get(tc).getClass().getName());
+				//			if (tmp2.get(tc).toString().contains("Runtime") || tmp2.get(tc).toString().contains("install"))
+				//			{
+								
+								/*File file = new File("output.txt");
+								FileOutputStream fis = new FileOutputStream(file);
+								PrintStream out = new PrintStream(fis);*/
+				//				PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+				//				System.setOut(out);
+								
+								System.out.println("!!!getuseanddefboxes---**"+tmp2.get(tc).toString());
+			//				}
+							
+			//				}
+						    	
+						}
+						
+				/*		List<ValueBox> value = m.getActiveBody().getDefBoxes();
+						int len1 = value.size();
+						int i;
+						for (i= 0; i<len1;i++)
+						{
+							//if (value.get(i).toString().contains("install"))
+							System.out.println("getdefboxes&&--" + value.get(i).toString());
+							
+						}
+		
+						java.util.Iterator<ValueBox> tm = m.getActiveBody().getUseBoxes().iterator();
+						if (tm.hasNext())
+							System.out.println("getuseboxes ----"+tm.toString());
+						java.util.Iterator<Unit> u = m.getActiveBody().getUnits().snapshotIterator();
+						if(u.hasNext()){
+							System.out.println("getUnits**---" + u.toString());
+						
+							}*/
+						    
+>>>>>>> backup
 					}
 			}
 			//Scene.v().setEntryPoints(tmpent);
