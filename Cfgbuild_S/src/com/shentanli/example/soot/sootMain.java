@@ -23,13 +23,12 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
 	//private final static String androidJAR = "android.jar";
-	private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
+	private final static String androidJAR = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
-//	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/91desktop.apk";
-	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
-	private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
+	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
+	private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
 	public static void inialiseSoot()
 	{
 		if (SOOT_INITIALIZED)
@@ -56,9 +55,11 @@ public class sootMain {
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
+		System.out.println("now to run packmanager.apply");
 		PackManager.v().getPack("wjtp").apply();
 		PackManager.v().runPacks();
 		String methodname = "getRuntime";
+		System.out.println("now to go to getgh mtehod");
 		getgh(methodname);
 		System.out.println("done");
 		
@@ -83,7 +84,7 @@ public class sootMain {
 		for (SootClass c:Scene.v().getApplicationClasses())
 		
 		{
-		//	System.out.println("sootclass "+ c);			
+			System.out.println("sootclass "+ c);			
 			for (SootMethod m:c.getMethods()){
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
@@ -106,22 +107,22 @@ public class sootMain {
 						{
 					//		if (tmp2.get(tc).getClass().getName().equalsIgnoreCase(c1) || tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2) || 
 					//				tmp2.get(tc).getClass().getName().equalsIgnoreCase(c3) )
-							if(tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2))
-							{				
+					//		if(tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2))
+				//			{				
 							//System.out.println("the classname from the use&defboxes###---"+tmp2.get(tc).getClass().getName());
-							if (tmp2.get(tc).toString().contains("Runtime") || tmp2.get(tc).toString().contains("install"))
-							{
+				//			if (tmp2.get(tc).toString().contains("Runtime") || tmp2.get(tc).toString().contains("install"))
+				//			{
 								
 								/*File file = new File("output.txt");
 								FileOutputStream fis = new FileOutputStream(file);
 								PrintStream out = new PrintStream(fis);*/
-								PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-								System.setOut(out);
+				//				PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
+				//				System.setOut(out);
 								
 								System.out.println("!!!getuseanddefboxes---**"+tmp2.get(tc).toString());
-							}
+			//				}
 							
-							}
+			//				}
 						    	
 						}
 						
