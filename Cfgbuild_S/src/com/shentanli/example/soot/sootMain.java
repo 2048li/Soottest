@@ -23,6 +23,7 @@ import soot.options.Options;
 import soot.toolkits.graph.BriefUnitGraph;
 import soot.toolkits.graph.CompleteUnitGraph;
 import soot.toolkits.graph.ExceptionalUnitGraph;
+import soot.toolkits.graph.UnitGraph;
 
 public class sootMain {
 	private static boolean SOOT_INITIALIZED = false;
@@ -98,14 +99,19 @@ public class sootMain {
 			for (SootMethod m:c.getMethods()){
 			//	if ( m.getName().indexOf(methodname) != -1)
 					tmpent.add(m);	
-
-				//	System.out.println("method---"+m.toString());
+					
+					System.out.println("method---"+m.toString());
 					if (m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
 					//List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
+									
+						//graph relating
+						Ugf(m.getActiveBody());
+		
+						
 						for (java.util.Iterator<Unit> uit = m.getActiveBody().getUnits().iterator();uit.hasNext();)
 						{
 						    Stmt s = (Stmt) uit.next();
-						    System.out.println("from stmt all-----"+s.toString());
+						//    System.out.println("from stmt all-----"+s.toString());
 						    if (s.toString().contains("install"))
 						    {
 						    	List<UnitBox> pu = s.getBoxesPointingToThis();
@@ -120,7 +126,7 @@ public class sootMain {
 							}
 							
 						}
-						System.out.println("stmt done----");
+				//		System.out.println("stmt done----");
 				/*	int len = u.size();
 					for (int i = 0;i<len;i++)
 						System.out.println("the box---"+u.get(i).toString());
@@ -194,24 +200,36 @@ public class sootMain {
 			//Scene.v().setEntryPoints(tmpent);
 		}
 	}
-		//System.out.println("-----to get the graph---");	
+		System.out.println("-----to get the graph---");	
 		
-	/*	System.out.println("next to call graph");  
+		System.out.println("next to call graph");  
 		@SuppressWarnings("unused")
 		CallGraph cg = Scene.v().getCallGraph();
-		java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
-		System.out.println("method context ----"+tt.toString());
-
-	    
-		System.out.println("to show the graph");
-		if (cg.iterator().hasNext())
+		
+	  java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
+	  
+	 //  System.out.println("look at the method in the graph");
+		while(tt.hasNext())
 		{
 			
-			System.out.println("in the showing method");
+		//	System.out.println("graph method---"+tt.next().toString());
+		}
+
+	    
+		//System.out.println("to show the call graph");
+		while (cg.iterator().hasNext())
+		{
+			
+			//System.out.println("in the showing method");
+			if (tt.toString().contains("exec"))
+			{
+				
+			//System.out.println("the cg node ---"+cg.edgesInto(tt.next()));
+			}
 			Edge e = cg.iterator().next();
 			Body b = e.src().getActiveBody();
-			internalTransform(b,methodname);
-		}*/
+			//internalTransform(b,methodname);
+		}
 	
 		
 	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
@@ -255,6 +273,79 @@ public class sootMain {
 				return true;
 		}
 		return false;
+	}
+	
+	
+	static void Ugf(Body body)
+	{
+		UnitGraph ugf = new BriefUnitGraph(body);
+	    //heads and tails of bfg
+		java.util.Iterator<Unit>  hd = ugf.getHeads().iterator();
+		java.util.Iterator<Unit> tl = ugf.getTails().iterator();
+		while(hd.hasNext())
+		{
+			System.out.println("heads of briefunitgraph---"+hd.next().toString());
+			
+		}
+		while (tl.hasNext()){
+		//	if (tl.next().toString().isEmpty() == false && tl.next().toString().contains("install"))
+			 System.out.println("tails of briefunitgraph--"+tl.next().toString());
+
+			// if(tl.next().toString().contains("install"))
+				// System.out.println("tail contails install---");
+		}
+		      
+	//   java.util.Iterator<Unit> ut = ugf.getExtendedBasicBlockPathBetween(hd.next(), tl.next()).iterator(); 
+	//   while (ut.hasNext())
+	//	   System.out.println("path from hd to tl---**"+ut.next().toString());
+		java.util.Iterator<Unit> it = ugf.iterator();
+		while(it.hasNext())
+		{
+			//Unit u = it.next();
+			System.out.println("the graph unit^^^^^"+it.next().toString());
+		}   
+		
+		
+	}
+	
+	
+	static int Max = 5000;
+	//get the graph list of the apk[each method in each class]
+	static UnitGraph[] ufgl()
+	{
+		
+		UnitGraph var[] = new UnitGraph[Max]; 
+		int i = 0;
+		for (SootClass c:Scene.v().getApplicationClasses())	
+			for (SootMethod m:c.getMethods())
+			{
+				UnitGraph tmp = new BriefUnitGraph(m.getActiveBody());
+				var[i] = tmp;
+				i++;
+			}
+		
+		return var;
+		
+	}
+	
+	//traverse graph list to find target graph
+	static void Dectgraph(UnitGraph[] ug)
+	{
+		int len = ug.length;
+		UnitGraph[] candidate = new UnitGraph[Max];
+		int i;
+		for (i=0;i<len;i++)
+		{
+			java.util.Iterator<Unit> it = ug[i].iterator();
+			while(it.hasNext())
+			{
+				if (it.next().toString().contains("runtime"))
+				{
+					candidate[i] = ug[i]; 		
+				}
+			}
+		}
+		
 	}
 	
 	
