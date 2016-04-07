@@ -75,7 +75,7 @@ public class sootMain {
 		PackManager.v().runPacks();
 		String methodname = "getRuntime";
 		System.out.println("now to go to getgh mtehod");
-		getgh(methodname);
+		getgh();
 		System.out.println("done");
 		
 		//PackManager.v().writeOutput();
@@ -86,7 +86,7 @@ public class sootMain {
 	}
 	
 	
-	public static void getgh(String methodname)
+	public static void getgh()
 	{
 		
 		
@@ -370,21 +370,52 @@ public class sootMain {
         String tmp = new String();
         String tmp2 = new String();
         int count =0;
+        boolean find = false;
+        int c = 0;
+        UnitGraph findg[] = new UnitGraph[Max];
 		for (i = 0; i< gfh.length;i++)
-		{
-			count = speciall[i].length;
-			tmp = gfh[i].toString().trim();
+		  for (c= 0;c<gfh.length;c++) //find the target from the graphs except the one
+			  if (c != i )
+			  {
+			     count = speciall[c].length;
+		         tmp = gfh[c].toString().trim();
 			//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
 			//and I just want to get the class name
-			tmp2 = tmp.substring(5);
-			for (j=0;j<count;j++)
-				if (speciall[i][j].toString().contains(tmp2))
+		       	tmp2 = tmp.substring(4);
+		     	for (j=0;j<count;j++)
+				if (speciall[c][j].toString().isEmpty() == false && speciall[c][j].toString().contains(tmp2))
 				{
+					find = true;
+					//the length of special list first dimensionality is equal to candidate.
+					findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 					
-				}
-		 
+				}		 
 		    
-		}
+	        }
+		
+		//find cmd from find graphs
+		// if find , add these two to the findpath list;
+		// to judge if an apk has silent install equals to judge if the findpath is null
+		FindPath[] fp = new FindPath[Max];
+		if (find)
+	    	for ( i = 0;i<findg.length;i++)
+	    	{
+	    		java.util.Iterator<Unit> tra = findg[i].iterator();
+	    		while(tra.hasNext())
+	    		{
+	    			Unit tmpf = tra.next();
+	    			if (tmpf.toString().isEmpty() == false && tmpf.toString().contains("pm install"))
+	    			{
+	    				//how to add to findpath??
+	    				fp[i].count ++;
+	    				fp[i].start = findg[i];
+	    			//	fp[i].end = 
+	    			}
+	    			
+	    		}
+	    	}
+		
+		
 		
 		
 	}
