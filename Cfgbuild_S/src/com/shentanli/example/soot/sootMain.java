@@ -333,18 +333,59 @@ public class sootMain {
 	{
 		int len = ug.length;
 		UnitGraph[] candidate = new UnitGraph[Max];
-		int i;
+
+		int i;int j=0;
+		Unit ut;
+		Unit speciall[][] = new Unit[Max][Max];
+		Unit gfh[] = new Unit[Max]; //just get the head[0] of one graph is ok...
+		boolean bl = false;
 		for (i=0;i<len;i++)
 		{
 			java.util.Iterator<Unit> it = ug[i].iterator();
+			gfh[i] = ug[i].getHeads().get(0);
 			while(it.hasNext())
 			{
-				if (it.next().toString().contains("runtime"))
+				ut = it.next();
+				if (ut.toString().isEmpty() == false && ut.toString().contains("runtime"))
 				{
-					candidate[i] = ug[i]; 		
+					if (candidate[i] != ug[i])
+					    candidate[i] = ug[i]; 		
+					bl = true;
+					continue;
 				}
+				if (bl == true && ut.toString().isEmpty() == false && ut.toString().contains("specialinvoke"))
+				{
+					speciall[i][j] = ut;
+					j++;
+				}
+				
+				
 			}
 		}
+		
+		// traverse heads of graphs and compare with the specialinvoke list to find the target;
+		// I find that some heads of the graph are mostly like  some units
+		//I just consider the simple case I wrote.
+		// extract string from head and then judge whether contained in the specialinvoke unit
+        String tmp = new String();
+        String tmp2 = new String();
+        int count =0;
+		for (i = 0; i< gfh.length;i++)
+		{
+			count = speciall[i].length;
+			tmp = gfh[i].toString().trim();
+			//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
+			//and I just want to get the class name
+			tmp2 = tmp.substring(5);
+			for (j=0;j<count;j++)
+				if (speciall[i][j].toString().contains(tmp2))
+				{
+					
+				}
+		 
+		    
+		}
+		
 		
 	}
 	
