@@ -221,12 +221,13 @@ public class sootMain {
 		{
 			
 			//System.out.println("in the showing method");
-			if (tt.toString().contains("exec"))
-			{
+		//	if (tt.next().toString().contains("exec"))
+		//	{
 				
 			//System.out.println("the cg node ---"+cg.edgesInto(tt.next()));
-			}
-			Edge e = cg.iterator().next();
+		//	}
+			Edge e = cg.iterator().next(); 
+			System.out.println("the edge of the callgraph"+e.toString());
 			Body b = e.src().getActiveBody();
 			//internalTransform(b,methodname);
 		}
@@ -247,7 +248,7 @@ public class sootMain {
 			System.out.println("method name --"+method.getName().toString()) ;
 		}
 		*/
-		BriefUnitGraph bg = new BriefUnitGraph(body);
+		BriefUnitGraph bg = new BriefUnitGraph(body); 
 		List<Unit> ulist = bg.getHeads();
 		Unit u = ulist.get(0);
 		while (!unitBelongList(u, bg.getTails()))
@@ -373,7 +374,12 @@ public class sootMain {
         boolean find = false;
         int c = 0;
         UnitGraph findg[] = new UnitGraph[Max];
+        FindPath[] fp = new FindPath[Max];
+        Unit tmpf;
+		int e = 0;
+        
 		for (i = 0; i< gfh.length;i++)
+		{
 		  for (c= 0;c<gfh.length;c++) //find the target from the graphs except the one
 			  if (c != i )
 			  {
@@ -389,37 +395,54 @@ public class sootMain {
 					//the length of special list first dimensionality is equal to candidate.
 					findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 					
-				}		 
+				}	
+		     	
+			  }
 		    
-	        }
+	    	//find cmd from find graphs
+			// if find , add these two to the findpath list;
+			// to judge if an apk has silent install equals to judge if the findpath is null
+	       
+		  boolean start = false;
+		  boolean end = false;
+		  if(find)
+		  {
+		    //fp[i].count ++;
+	        fp[i].start = findg[i];
+	        //ignore these following note...
+	        //if doing in this way , the fp will not continuous...
+	        //maybe should build path from graph to unit...
+	       // fp[i].end = findg[i];
+	        start = true;
+		  }
 		
-		//find cmd from find graphs
-		// if find , add these two to the findpath list;
-		// to judge if an apk has silent install equals to judge if the findpath is null
-		FindPath[] fp = new FindPath[Max];
 		if (find)
-	    	for ( i = 0;i<findg.length;i++)
+	    	for ( e = 0;e<findg.length;e++)
 	    	{
-	    		java.util.Iterator<Unit> tra = findg[i].iterator();
+	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
 	    		{
-	    			Unit tmpf = tra.next();
+	    			if(end == false)
+	    			{
+	    			tmpf = tra.next();
 	    			if (tmpf.toString().isEmpty() == false && tmpf.toString().contains("pm install"))
 	    			{
 	    				//how to add to findpath??
-	    				fp[i].count ++;
-	    				fp[i].start = findg[i];
-	    			//	fp[i].end = 
+	    				//fp[i].count ++;
+	    				//fp[i].start = findg[i];
+	    				fp[i].end = ug[i];
+	    				end = true;
+	    				//fp[i].end = findg[e];
+	    			}
 	    			}
 	    			
 	    		}
-	    	}
-		
-		
-		
+	    	}		
+		if (start && end)
+			fp[i].count = fp[i].count+1;
 		
 	}
-	
-	
+		
 
+}
 }
