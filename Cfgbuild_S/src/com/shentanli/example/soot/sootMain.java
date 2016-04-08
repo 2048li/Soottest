@@ -73,10 +73,16 @@ public class sootMain {
 		PackManager.v().getPack("wjtp").apply();
 
 		PackManager.v().runPacks();
-		String methodname = "getRuntime";
-		System.out.println("now to go to getgh mtehod");
-		getgh();
-		System.out.println("done");
+		//String methodname = "getRuntime";
+		
+		//getgh();
+	    
+		boolean detect = false;
+		detect = isSilentInstallapk();
+		if (detect)
+			System.out.println("this apk mostly has silent install");
+		else
+			System.out.println("this apk may not has silent install");
 		
 		//PackManager.v().writeOutput();
 	//	PackManager.v().getPack("cg").apply();
@@ -86,6 +92,21 @@ public class sootMain {
 	}
 	
 	
+	//judge the apk
+	public static boolean isSilentInstallapk()
+	{
+		System.out.println("to call the ufgl");
+		UnitGraph[] apkug = ufgl();
+		System.out.println("to call the dectgraph");
+		FindPath[] apkfp = Dectgraph(apkug);
+		if (apkfp.length != 0) //if there is one findpath at least,then this apk is classified to silent install
+			return true;
+		else
+			return false;
+	}
+	
+	
+	//the call graph... just to test and print
 	public static void getgh()
 	{
 		
@@ -314,7 +335,7 @@ public class sootMain {
 	//get the graph list of the apk[each method in each class]
 	static UnitGraph[] ufgl()
 	{
-		
+		System.out.println("in the ufgl method and to get UnitGraph array");
 		UnitGraph var[] = new UnitGraph[Max]; 
 		int i = 0;
 		for (SootClass c:Scene.v().getApplicationClasses())	
@@ -324,14 +345,18 @@ public class sootMain {
 				var[i] = tmp;
 				i++;
 			}
-		
+		System.out.println("now to return--");
 		return var;
 		
 	}
 	
 	//traverse graph list to find target graph
-	static void Dectgraph(UnitGraph[] ug)
+	static FindPath[] Dectgraph(UnitGraph[] ug)
 	{
+		System.out.println("in the Dectgraph method---");
+		System.out.println("the length of the unitgraph is :"+ug.length);
+		if (ug.length != 0)
+		{
 		int len = ug.length;
 		UnitGraph[] candidate = new UnitGraph[Max];
 
@@ -340,6 +365,7 @@ public class sootMain {
 		Unit speciall[][] = new Unit[Max][Max];
 		Unit gfh[] = new Unit[Max]; //just get the head[0] of one graph is ok...
 		boolean bl = false;
+		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<len;i++)
 		{
 			java.util.Iterator<Unit> it = ug[i].iterator();
@@ -368,6 +394,7 @@ public class sootMain {
 		// I find that some heads of the graph are mostly like  some units
 		//I just consider the simple case I wrote.
 		// extract string from head and then judge whether contained in the specialinvoke unit
+		
         String tmp = new String();
         String tmp2 = new String();
         int count =0;
@@ -378,6 +405,7 @@ public class sootMain {
         Unit tmpf;
 		int e = 0;
         
+		System.out.println("now to get the findg graph~~~");
 		for (i = 0; i< gfh.length;i++)
 		{
 		  for (c= 0;c<gfh.length;c++) //find the target from the graphs except the one
@@ -416,6 +444,7 @@ public class sootMain {
 	        start = true;
 		  }
 		
+		System.out.println("now to build the findpath");
 		if (find)
 	    	for ( e = 0;e<findg.length;e++)
 	    	{
@@ -438,11 +467,16 @@ public class sootMain {
 	    			
 	    		}
 	    	}		
-		if (start && end)
-			fp[i].count = fp[i].count+1;
-		
+		System.out.println("now to set the findpath count");
+		if (find && start && end)
+			fp[i].count = fp[i].count+1;	
 	}
 		
-
+		System.out.println("----return findpah---");
+		return fp;
+		}
+	
+	return null;
+	
 }
 }
