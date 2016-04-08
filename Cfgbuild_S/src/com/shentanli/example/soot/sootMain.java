@@ -96,9 +96,10 @@ public class sootMain {
 	public static boolean isSilentInstallapk()
 	{
 		System.out.println("to call the ufgl");
-		UnitGraph[] apkug = ufgl();
+		UnitGraph[] apkug = ufgl().var;
+		int apkuglen = ufgl().uglen;
 		System.out.println("to call the dectgraph");
-		FindPath[] apkfp = Dectgraph(apkug);
+		FindPath[] apkfp = Dectgraph(apkug,apkuglen);
 		if (apkfp.length != 0) //if there is one findpath at least,then this apk is classified to silent install
 			return true;
 		else
@@ -333,40 +334,44 @@ public class sootMain {
 	
 	static int Max = 5000;
 	//get the graph list of the apk[each method in each class]
-	static UnitGraph[] ufgl()
+	static UnitGraphLen ufgl()
 	{
 		System.out.println("in the ufgl method and to get UnitGraph array");
-		UnitGraph var[] = new UnitGraph[Max]; 
+		UnitGraphLen var1 = new UnitGraphLen(); 
+		UnitGraph var[] = var1.var;
+		UnitGraph tmp ;
 		int i = 0;
 		for (SootClass c:Scene.v().getApplicationClasses())	
 			for (SootMethod m:c.getMethods())
 			{
-				UnitGraph tmp = new BriefUnitGraph(m.getActiveBody());
+				tmp = new BriefUnitGraph(m.getActiveBody());
 				var[i] = tmp;
 				i++;
 			}
+		var1.uglen = i+1;
 		System.out.println("now to return--");
-		return var;
+		return var1;
 		
 	}
 	
 	//traverse graph list to find target graph
-	static FindPath[] Dectgraph(UnitGraph[] ug)
+	static FindPath[] Dectgraph(UnitGraph[] ug, int apkuglen)
 	{
 		System.out.println("in the Dectgraph method---");
-		System.out.println("the length of the unitgraph is :"+ug.length);
-		if (ug.length != 0)
+		System.out.println("the length of the unitgraph is :"+apkuglen);
+		if (apkuglen != 0)
 		{
-		int len = ug.length;
+	//	int len = ug.length;
 		UnitGraph[] candidate = new UnitGraph[Max];
 
 		int i;int j=0;
 		Unit ut;
 		Unit speciall[][] = new Unit[Max][Max];
-		Unit gfh[] = new Unit[Max]; //just get the head[0] of one graph is ok...
+		UnitLen tgfh = new UnitLen();
+		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
 		boolean bl = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
-		for (i=0;i<len;i++)
+		for (i=0;i<apkuglen;i++)
 		{
 			java.util.Iterator<Unit> it = ug[i].iterator();
 			gfh[i] = ug[i].getHeads().get(0);
