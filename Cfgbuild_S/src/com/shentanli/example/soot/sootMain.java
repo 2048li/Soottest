@@ -100,10 +100,20 @@ public class sootMain {
 		int apkuglen = ufgl().uglen;
 		System.out.println("to call the dectgraph");
 		FindPath[] apkfp = Dectgraph(apkug,apkuglen);
-		if (apkfp.length != 0) //if there is one findpath at least,then this apk is classified to silent install
+		int q ;
+		boolean result = false;
+		for (q=0;q<5000;q++)
+			if (apkfp[q].count != 0) {
+				result = true;
+				return result;
+			}
+		return result;
+
+
+		/*if (apkfp.length != 0) //if there is one findpath at least,then this apk is classified to silent install
 			return true;
 		else
-			return false;
+			return false;*/
 	}
 	
 	
@@ -362,13 +372,13 @@ public class sootMain {
 		if (apkuglen != 0)
 		{
 	//	int len = ug.length;
-		UnitGraph[] candidate = new UnitGraph[Max];
+		UnitGraph[] candidate = new UnitGraph[apkuglen];
 
 		int i;int j=0;
 		Unit ut;
-		Unit speciall[][] = new Unit[Max][Max];
 		UnitLen tgfh = new UnitLen();
 		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
+			Unit[][] speciall = tgfh.specialll;
 		boolean bl = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
@@ -383,17 +393,23 @@ public class sootMain {
 					if (candidate[i] != ug[i])
 					    candidate[i] = ug[i]; 		
 					bl = true;
-					continue;
+					//continue;
 				}
 				if (bl == true && ut.toString().isEmpty() == false && ut.toString().contains("specialinvoke"))
 				{
 					speciall[i][j] = ut;
 					j++;
+					continue;
 				}
 				
 				
 			}
 		}
+
+			tgfh.ul = i;//the length of the gfh
+			tgfh.speicalfi[i] = i;//the first length of the speciall
+			tgfh.specialtw[i] = j;//the secodn length of the speciall
+
 		
 		// traverse heads of graphs and compare with the specialinvoke list to find the target;
 		// I find that some heads of the graph are mostly like  some units
@@ -405,33 +421,35 @@ public class sootMain {
         int count =0;
         boolean find = false;
         int c = 0;
-        UnitGraph findg[] = new UnitGraph[Max];
+			UnitGraphLen findgt = new UnitGraphLen();
+        UnitGraph findg[] = findgt.var;
         FindPath[] fp = new FindPath[Max];
         Unit tmpf;
 		int e = 0;
         
 		System.out.println("now to get the findg graph~~~");
-		for (i = 0; i< gfh.length;i++)
-		{
-		  for (c= 0;c<gfh.length;c++) //find the target from the graphs except the one
-			  if (c != i )
-			  {
-			     count = speciall[c].length;
-		         tmp = gfh[c].toString().trim();
-			//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
-			//and I just want to get the class name
-		       	tmp2 = tmp.substring(4);
-		     	for (j=0;j<count;j++)
-				if (speciall[c][j].toString().isEmpty() == false && speciall[c][j].toString().contains(tmp2))
-				{
-					find = true;
-					//the length of special list first dimensionality is equal to candidate.
-					findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
-					
-				}	
-		     	
-			  }
-		    
+			int findgtlen = 0;
+
+		for (i = 0; i< tgfh.ul;i++) {
+			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
+				if (c != i) {
+					count = tgfh.speicalfi[c];
+					tmp = gfh[c].toString().trim();
+					//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
+					//and I just want to get the class name
+					tmp2 = tmp.substring(4);
+					for (j = 0; j < count; j++)
+						if (speciall[c][j].toString().isEmpty() == false && speciall[c][j].toString().contains(tmp2)) {
+							find = true;
+							//the length of special list first dimensionality is equal to candidate.
+							findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
+							findgtlen ++;
+
+						}
+
+				}
+
+		    findgt.uglen = findgtlen;
 	    	//find cmd from find graphs
 			// if find , add these two to the findpath list;
 			// to judge if an apk has silent install equals to judge if the findpath is null
@@ -451,7 +469,7 @@ public class sootMain {
 		
 		System.out.println("now to build the findpath");
 		if (find)
-	    	for ( e = 0;e<findg.length;e++)
+	    	for ( e = 0;e<findgt.uglen;e++)
 	    	{
 	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
@@ -474,7 +492,7 @@ public class sootMain {
 	    	}		
 		System.out.println("now to set the findpath count");
 		if (find && start && end)
-			fp[i].count = fp[i].count+1;	
+			fp[i].count = fp[i].count+1;
 	}
 		
 		System.out.println("----return findpah---");
