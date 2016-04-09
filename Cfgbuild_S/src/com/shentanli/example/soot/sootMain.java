@@ -114,9 +114,11 @@ public class sootMain {
 		FindPath[] apkfp = Dectgraph(apkug,apkuglen);
 		int q ;
 		boolean result = false;
-		for (q=0;q<5000;q++)
-			if (apkfp[q].count != 0) {
+		System.out.println("now to set the result");
+		for (q=0;q<50;q++)
+			if (apkfp[q].count > 0) {
 				result = true;
+				System.out.println("to return result" + result);
 				return result;
 			}
 		return result;
@@ -401,28 +403,38 @@ public class sootMain {
 		Unit ut;
 		UnitLen tgfh = new UnitLen();
 		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
-			Unit[][] speciall = tgfh.specialll;
+		Unit[][] speciall = tgfh.specialll;
 		boolean bl = false;
 		boolean nz = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
 		{
-			if (ug[i].size() != 0)
+			System.out.println("the ug[i] size is .."+ug[i].size());
+			if (ug[i].size() > 0)
 			{
 			java.util.Iterator<Unit> it = ug[i].iterator();
+			System.out.println("now to get the head");
 			gfh[i] = ug[i].getHeads().get(0);
 			while(it.hasNext())
 			{
+				System.out.println("in the candidate find for");
 				ut = it.next();
-				if (ut.toString().isEmpty() == false && ut.toString().contains("runtime"))
+				//System.out.println("the  ut value:"+ut.toString());
+				//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
+				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime"))
 				{
-					if (candidate[i] != ug[i])
-					    candidate[i] = ug[i]; 		
+					System.out.println("in the runtime judge for");
+				//	if (candidate[i] != ug[i]){
+					    candidate[i] = ug[i]; 
+					    System.out.println("set the candidate to ug[i]");
+				//	}
+					System.out.println("set the bl true");
 					bl = true;
 					//continue;
 				}
 				if (bl == true && ut.toString().isEmpty() == false && ut.toString().contains("specialinvoke"))
 				{
+					System.out.println("get the specialinvoke");
 					speciall[i][j] = ut;
 					j++;
 					continue;
@@ -466,13 +478,15 @@ public class sootMain {
 				if (c != i) {
 					System.out.println("in the for to find target except the one");
 					count = tgfh.speicalfi[c];
+					System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
 					//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
 					//and I just want to get the class name
 					System.out.println("the gfh  :"+tmp.toString());
 					tmp2 = tmp.substring(14);
 					System.out.println("substring of the head:  "+tmp2.toString());
-					
+					//why program do not enter this for ??
+					//To do !!!!!!
 					for (d = 0; d < count; d++)
 					{
 						System.out.println("special arrary "+speciall[c][d].toString());
@@ -512,6 +526,7 @@ public class sootMain {
 		if (find)
 	    	for ( e = 0;e<findgt.uglen;e++)
 	    	{
+	    		System.out.println("in the findgt for to get the end ");
 	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
 	    		{
