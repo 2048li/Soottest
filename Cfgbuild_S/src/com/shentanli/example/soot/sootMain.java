@@ -96,8 +96,20 @@ public class sootMain {
 	public static boolean isSilentInstallapk()
 	{
 		System.out.println("to call the ufgl");
-		UnitGraph[] apkug = ufgl().var;
-		int apkuglen = ufgl().uglen;
+		UnitGraphLen var1 = new UnitGraphLen(); 
+		UnitGraph[] apkug = ufgl(var1).var;
+		int apkuglen = ufgl(var1).uglen;
+		System.out.println("the length of the ufgl is "+ apkuglen);
+		
+	/*	for (int i = 0;i<apkuglen;i++)
+		{
+			if (apkug[i].size() != 0 && apkug[i].toString().isEmpty() ==false)
+			{
+				System.out.println("the size of apkup "+i+"is"+apkug[i].size());
+			System.out.println("the returned apkgraph arrary---"+i + apkug[i].getHeads());
+			}
+		}
+	*/
 		System.out.println("to call the dectgraph");
 		FindPath[] apkfp = Dectgraph(apkug,apkuglen);
 		int q ;
@@ -344,21 +356,31 @@ public class sootMain {
 	
 	static int Max = 5000;
 	//get the graph list of the apk[each method in each class]
-	static UnitGraphLen ufgl()
+	static UnitGraphLen ufgl(UnitGraphLen var1)
 	{
+		System.out.println("the varlebn is "+ var1.uglen);
 		System.out.println("in the ufgl method and to get UnitGraph array");
-		UnitGraphLen var1 = new UnitGraphLen(); 
+		//UnitGraphLen var1 = new UnitGraphLen(); 
+		
 		UnitGraph var[] = var1.var;
 		UnitGraph tmp ;
-		int i = 0;
+		int i = -1;
+	
 		for (SootClass c:Scene.v().getApplicationClasses())	
 			for (SootMethod m:c.getMethods())
 			{
 				tmp = new BriefUnitGraph(m.getActiveBody());
+				System.out.println("the value of the var1 "+ i +tmp.toString());
+				if(tmp.toString().isEmpty()==false)
+				{
+				i=i+1;
 				var[i] = tmp;
-				i++;
+				
+				}
 			}
-		var1.uglen = i+1;
+		var1.uglen = i;
+		System.out.println(" uglen is "+var1.uglen);
+		System.out.println("the i is "+i);
 		System.out.println("now to return--");
 		return var1;
 		
@@ -375,14 +397,18 @@ public class sootMain {
 		UnitGraph[] candidate = new UnitGraph[apkuglen];
 
 		int i;int j=0;
+		int d = 0;
 		Unit ut;
 		UnitLen tgfh = new UnitLen();
 		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
 			Unit[][] speciall = tgfh.specialll;
 		boolean bl = false;
+		boolean nz = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
 		{
+			if (ug[i].size() != 0)
+			{
 			java.util.Iterator<Unit> it = ug[i].iterator();
 			gfh[i] = ug[i].getHeads().get(0);
 			while(it.hasNext())
@@ -404,12 +430,17 @@ public class sootMain {
 				
 				
 			}
+			nz = true;
+			}
 		}
-
+        
+		if (nz= true)
+		{
 			tgfh.ul = i;//the length of the gfh
 			tgfh.speicalfi[i] = i;//the first length of the speciall
 			tgfh.specialtw[i] = j;//the secodn length of the speciall
-
+		
+		
 		
 		// traverse heads of graphs and compare with the specialinvoke list to find the target;
 		// I find that some heads of the graph are mostly like  some units
@@ -433,19 +464,28 @@ public class sootMain {
 		for (i = 0; i< tgfh.ul;i++) {
 			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
 				if (c != i) {
+					System.out.println("in the for to find target except the one");
 					count = tgfh.speicalfi[c];
 					tmp = gfh[c].toString().trim();
 					//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
 					//and I just want to get the class name
-					tmp2 = tmp.substring(4);
-					for (j = 0; j < count; j++)
-						if (speciall[c][j].toString().isEmpty() == false && speciall[c][j].toString().contains(tmp2)) {
+					System.out.println("the gfh  :"+tmp.toString());
+					tmp2 = tmp.substring(14);
+					System.out.println("substring of the head:  "+tmp2.toString());
+					
+					for (d = 0; d < count; d++)
+					{
+						System.out.println("special arrary "+speciall[c][d].toString());
+						if (speciall[c][d].toString().isEmpty() == false && speciall[c][d].toString().contains(tmp2)) {
+							
 							find = true;
 							//the length of special list first dimensionality is equal to candidate.
 							findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 							findgtlen ++;
+							System.out.println("find is true");
 
 						}
+					}
 
 				}
 
@@ -465,6 +505,7 @@ public class sootMain {
 	        //maybe should build path from graph to unit...
 	       // fp[i].end = findg[i];
 	        start = true;
+	        System.out.println("the start is true");
 		  }
 		
 		System.out.println("now to build the findpath");
@@ -484,6 +525,7 @@ public class sootMain {
 	    				//fp[i].start = findg[i];
 	    				fp[i].end = ug[i];
 	    				end = true;
+	    				System.out.println("the end is true");
 	    				//fp[i].end = findg[e];
 	    			}
 	    			}
@@ -492,11 +534,15 @@ public class sootMain {
 	    	}		
 		System.out.println("now to set the findpath count");
 		if (find && start && end)
+		{
 			fp[i].count = fp[i].count+1;
+		    System.out.println("the fp["+i+"].count is "+fp[i].count);
+		}
 	}
 		
 		System.out.println("----return findpah---");
 		return fp;
+		}
 		}
 	
 	return null;
