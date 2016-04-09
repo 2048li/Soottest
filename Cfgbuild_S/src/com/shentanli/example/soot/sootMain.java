@@ -117,6 +117,7 @@ public class sootMain {
 		System.out.println("now to set the result");
 		for (q=0;q<50;q++)
 			if (apkfp[q].count > 0) {
+				System.out.println("in the apkfg count cal");
 				result = true;
 				System.out.println("to return result" + result);
 				return result;
@@ -447,7 +448,7 @@ public class sootMain {
 					    if (tut.toString().contains("specialinvoke"))
 					    {
 				     	System.out.println("get the specialinvoke");
-				    	speciall[i][j] = tut;
+				    	speciall[i][j] = tut; // if so the speciall is not concrete...
 				    	j++;
 				    	fi++;
 					    }
@@ -456,9 +457,7 @@ public class sootMain {
 					
 					//continue;
 				}
-				
-				
-				
+						
 			//}
 			System.out.println("the nz is true");
 			nz = true;
@@ -469,7 +468,7 @@ public class sootMain {
 		{
 			System.out.println("to set the specialfi and tw count");
 			tgfh.ul = i;//the length of the gfh
-			tgfh.speicalfi[i] = fi;//the first length of the speciall
+			tgfh.speicalfi[i] = fi;//the first length of the speciall;actually this may be unnecessay: can use the boolean array to indicate whether the speical is null;
 			tgfh.specialtw[i] = j;//the secodn length of the speciall
 			System.out.println("the length of the gfh is "+ tgfh.ul);
 			System.out.println("i is "+ fi);
@@ -502,17 +501,21 @@ public class sootMain {
 				if (c != i) {
 					System.out.println("in the for to find target except the one");
 					System.out.println("c is "+c);
-					count = tgfh.speicalfi[c];
+					System.out.println("bl[c] is " +bl[c]);
+					System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
+					if (bl[c] == true && tgfh.specialtw[c] > 0) // why the especialtw[c] is 0?? And todo 
+					{
+					count = tgfh.specialtw[c];
 					System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
 					//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
 					//and I just want to get the class name
 					System.out.println("the gfh  :"+tmp.toString());
-					tmp2 = tmp.substring(14);
+					tmp2 = tmp.substring(14); //by observing
 					System.out.println("substring of the head:  "+tmp2.toString());
-					//why program do not enter this for ??
-					//To do !!!!!!
+					
 					for (d = 0; d < count; d++)
+					
 					{
 						System.out.println("special arrary "+speciall[c][d].toString());
 						if (speciall[c][d].toString().isEmpty() == false && speciall[c][d].toString().contains(tmp2)) {
@@ -524,6 +527,7 @@ public class sootMain {
 							System.out.println("find is true");
 
 						}
+					}
 					}
 
 				}
