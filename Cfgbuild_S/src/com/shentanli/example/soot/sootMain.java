@@ -398,13 +398,15 @@ public class sootMain {
 	//	int len = ug.length;
 		UnitGraph[] candidate = new UnitGraph[apkuglen];
 
-		int i;int j=0;
+		int i;int j=0; int fi=0;
 		int d = 0;
 		Unit ut;
 		UnitLen tgfh = new UnitLen();
 		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
 		Unit[][] speciall = tgfh.specialll;
-		boolean bl = false;
+		boolean[] bl = new boolean[apkuglen];
+		for (int tt = 0; tt<apkuglen;tt++)
+			bl[tt] = false;
 		boolean nz = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
@@ -419,7 +421,7 @@ public class sootMain {
 			{
 				System.out.println("in the candidate find for");
 				ut = it.next();
-				//System.out.println("the  ut value:"+ut.toString());
+				System.out.println("the  ut value:"+ut.toString());
 				//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
 				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime"))
 				{
@@ -429,28 +431,50 @@ public class sootMain {
 					    System.out.println("set the candidate to ug[i]");
 				//	}
 					System.out.println("set the bl true");
-					bl = true;
+					bl[i] = true;
 					//continue;
 				}
-				if (bl == true && ut.toString().isEmpty() == false && ut.toString().contains("specialinvoke"))
+			}	
+				
+				if ( bl[i] ==  true ) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
 				{
 					System.out.println("get the specialinvoke");
-					speciall[i][j] = ut;
-					j++;
-					continue;
+					java.util.Iterator<Unit> ttt = candidate[i].iterator();
+					while (ttt.hasNext())
+					{
+						Unit tut = ttt.next();
+						System.out.println("the unit from ttt is "+ tut.toString());
+					    if (tut.toString().contains("specialinvoke"))
+					    {
+				     	System.out.println("get the specialinvoke");
+				    	speciall[i][j] = tut;
+				    	j++;
+				    	fi++;
+					    }
+					   
+					}
+					
+					//continue;
 				}
 				
 				
-			}
+				
+			//}
+			System.out.println("the nz is true");
 			nz = true;
 			}
 		}
         
 		if (nz= true)
 		{
+			System.out.println("to set the specialfi and tw count");
 			tgfh.ul = i;//the length of the gfh
-			tgfh.speicalfi[i] = i;//the first length of the speciall
+			tgfh.speicalfi[i] = fi;//the first length of the speciall
 			tgfh.specialtw[i] = j;//the secodn length of the speciall
+			System.out.println("the length of the gfh is "+ tgfh.ul);
+			System.out.println("i is "+ fi);
+			System.out.println("j is "+ j);
+			
 		
 		
 		
@@ -477,6 +501,7 @@ public class sootMain {
 			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
 				if (c != i) {
 					System.out.println("in the for to find target except the one");
+					System.out.println("c is "+c);
 					count = tgfh.speicalfi[c];
 					System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
