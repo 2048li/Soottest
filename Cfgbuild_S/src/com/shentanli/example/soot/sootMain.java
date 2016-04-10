@@ -397,8 +397,10 @@ public class sootMain {
 		if (apkuglen != 0)
 		{
 	//	int len = ug.length;
+		//UnitGraphLen candidatel = new UnitGraphLen();
 		UnitGraph[] candidate = new UnitGraph[apkuglen];
-
+        int cac = 0; //count the candidate 
+        
 		int i;int j=-1; int fi=-1;
 		int d = 0;
 		Unit ut;
@@ -433,7 +435,7 @@ public class sootMain {
 				{
 					System.out.println("in the runtime judge for");
 				//	if (candidate[i] != ug[i]){
-					    candidate[i] = ug[i]; 
+					    candidate[i] = ug[i];  //candidate is not concrete so if in for use the length of candidate may get the wrong result.
 					    System.out.println("set the candidate to ug[i]");
 				//	}
 					System.out.println("set the bl true");
@@ -556,6 +558,9 @@ public class sootMain {
 							findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 							findgtlen ++;
 							System.out.println("find is true");
+							
+							
+							continue;
 
 						}
 					}
@@ -582,11 +587,15 @@ public class sootMain {
 	        System.out.println("the start is true");
 		  }
 		
-		System.out.println("now to build the findpath");
+		System.out.println("now to build the findpath");//todo build path.....the following maybe wrong....
 		if (find)
-	    	for ( e = 0;e<findgt.uglen;e++)
+	    //	for ( e = 0;e<findgt.uglen;e++) //the findgt.uglen may be wrong....
+			for (e = 0;e<tgfh.ul;e++)
 	    	{
+				
 	    		System.out.println("in the findgt for to get the end ");
+	    		if (findg[e] != null)
+	    		{
 	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
 	    		{
@@ -606,6 +615,7 @@ public class sootMain {
 	    			}
 	    			
 	    		}
+	    	}
 	    	}		
 		System.out.println("now to set the findpath count");
 		if (find && start && end)
