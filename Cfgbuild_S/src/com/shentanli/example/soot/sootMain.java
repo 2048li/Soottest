@@ -399,7 +399,7 @@ public class sootMain {
 	//	int len = ug.length;
 		UnitGraph[] candidate = new UnitGraph[apkuglen];
 
-		int i;int j=0; int fi=0;
+		int i;int j=-1; int fi=-1;
 		int d = 0;
 		Unit ut;
 		UnitLen tgfh = new UnitLen();
@@ -433,27 +433,40 @@ public class sootMain {
 				//	}
 					System.out.println("set the bl true");
 					bl[i] = true;
+					System.out.println("i in candidate is "+i);
 					//continue;
 				}
 			}	
 				
 				if ( bl[i] ==  true ) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
 				{
+					System.out.println("i is true and get the specialinvoke"+i);
 					System.out.println("get the specialinvoke");
 					java.util.Iterator<Unit> ttt = candidate[i].iterator();
 					while (ttt.hasNext())
 					{
 						Unit tut = ttt.next();
 						System.out.println("the unit from ttt is "+ tut.toString());
-					    if (tut.toString().contains("specialinvoke"))
+					    if (tut.toString().contains("specialinvoke") || tut.toString().contains("virtualinvoke"))
 					    {
 				     	System.out.println("get the specialinvoke");
+				     	System.out.println("the specialinvoke is "+ tut.toString());
+				     	j= j+1;
+				     	fi = fi+1;
+				     	System.out.println("j is "+j);
+				     	System.out.println("i is in this time is "+i);
 				    	speciall[i][j] = tut; // if so the speciall is not concrete...
-				    	j++;
-				    	fi++;
+				    	//j++;
+				    	//fi++;
+				    	
+				    	tgfh.speicalfi[i] = fi;
+						tgfh.specialtw[i] = j;
+						System.out.println("i is "+ fi);
+						System.out.println("j is "+ j);
 					    }
 					   
 					}
+					
 					
 					//continue;
 				}
@@ -468,11 +481,11 @@ public class sootMain {
 		{
 			System.out.println("to set the specialfi and tw count");
 			tgfh.ul = i;//the length of the gfh
-			tgfh.speicalfi[i] = fi;//the first length of the speciall;actually this may be unnecessay: can use the boolean array to indicate whether the speical is null;
-			tgfh.specialtw[i] = j;//the secodn length of the speciall
+		//	tgfh.speicalfi[i] = fi;//the first length of the speciall;actually this may be unnecessay: can use the boolean array to indicate whether the speical is null;
+		//	tgfh.specialtw[i] = j;//the secodn length of the speciall
 			System.out.println("the length of the gfh is "+ tgfh.ul);
-			System.out.println("i is "+ fi);
-			System.out.println("j is "+ j);
+		//	System.out.println("i is "+ fi);
+		//	System.out.println("j is "+ j);
 			
 		
 		
@@ -503,8 +516,9 @@ public class sootMain {
 					System.out.println("c is "+c);
 					System.out.println("bl[c] is " +bl[c]);
 					System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
-					if (bl[c] == true && tgfh.specialtw[c] > 0) // why the especialtw[c] is 0?? And todo 
+					if (bl[c] == true && tgfh.specialtw[c] > 0) 
 					{
+						System.out.println("c is in this time is"+c);
 					count = tgfh.specialtw[c];
 					System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
@@ -517,6 +531,7 @@ public class sootMain {
 					for (d = 0; d < count; d++)
 					
 					{
+						
 						System.out.println("special arrary "+speciall[c][d].toString());
 						if (speciall[c][d].toString().isEmpty() == false && speciall[c][d].toString().contains(tmp2)) {
 							
