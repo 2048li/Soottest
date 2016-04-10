@@ -406,8 +406,12 @@ public class sootMain {
 		Unit gfh[] = tgfh.ug; //just get the head[0] of one graph is ok...
 		Unit[][] speciall = tgfh.specialll;
 		boolean[] bl = new boolean[apkuglen];
+		boolean[] bs = new boolean[apkuglen];
 		for (int tt = 0; tt<apkuglen;tt++)
+		{
 			bl[tt] = false;
+			bs[tt] = false;
+		}
 		boolean nz = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
@@ -420,11 +424,12 @@ public class sootMain {
 			gfh[i] = ug[i].getHeads().get(0);
 			while(it.hasNext())
 			{
+				
 				System.out.println("in the candidate find for");
 				ut = it.next();
 				System.out.println("the  ut value:"+ut.toString());
 				//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
-				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime"))
+				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime")) // if contains specialinvoke means that it is not the bottom 
 				{
 					System.out.println("in the runtime judge for");
 				//	if (candidate[i] != ug[i]){
@@ -432,13 +437,24 @@ public class sootMain {
 					    System.out.println("set the candidate to ug[i]");
 				//	}
 					System.out.println("set the bl true");
-					bl[i] = true;
+					bl[i] = true; //actually do not think about this condition: the ug is the one that been invoked , in this case is the bodymethod itself. 
+					// so how to judge that the graph is the callee class??----if there is no other specialinvok, that means that the method of the class is the bottom.
 					System.out.println("i in candidate is "+i);
 					//continue;
 				}
+				// to judge this graph contain specialinvoke
+				if (ut.toString().contains("specialinvoke"))
+				{
+					bs[i] = true;
+					System.out.println("unit contains specialinvoke and set true");
+				}
 			}	
+			
+			
+			
+			
 				
-				if ( bl[i] ==  true ) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
+				if ( bl[i] ==  true && bs[i] == true) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
 				{
 					System.out.println("i is true and get the specialinvoke"+i);
 					System.out.println("get the specialinvoke");
@@ -447,10 +463,10 @@ public class sootMain {
 					{
 						Unit tut = ttt.next();
 						System.out.println("the unit from ttt is "+ tut.toString());
-					    if (tut.toString().contains("specialinvoke") || tut.toString().contains("virtualinvoke"))
-					    {
-				     	System.out.println("get the specialinvoke");
-				     	System.out.println("the specialinvoke is "+ tut.toString());
+					//    if (tut.toString().contains("specialinvoke") )
+					//    {
+				    // 	System.out.println("get the specialinvoke");
+				   //  	System.out.println("the specialinvoke is "+ tut.toString());
 				     	j= j+1;
 				     	fi = fi+1;
 				     	System.out.println("j is "+j);
@@ -463,7 +479,7 @@ public class sootMain {
 						tgfh.specialtw[i] = j;
 						System.out.println("i is "+ fi);
 						System.out.println("j is "+ j);
-					    }
+					//    }
 					   
 					}
 					
