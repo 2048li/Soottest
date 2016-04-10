@@ -524,7 +524,7 @@ public class sootMain {
         
 		System.out.println("now to get the findg graph~~~");
 			int findgtlen = 0;
-
+ // find contain head from the specialinvoke unit
 		for (i = 0; i< tgfh.ul;i++) {
 			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
 				if (c != i) {
@@ -532,7 +532,7 @@ public class sootMain {
 					System.out.println("c is "+c);
 					System.out.println("bl[c] is " +bl[c]);
 					System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
-					if (bl[c] == true && tgfh.specialtw[c] > 0) 
+					if (bl[c] == true && bs[c] == true && tgfh.specialtw[c] > 0) 
 					{
 						System.out.println("c is in this time is"+c);
 					count = tgfh.specialtw[c];
