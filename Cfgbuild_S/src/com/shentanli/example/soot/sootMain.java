@@ -518,25 +518,36 @@ public class sootMain {
         int count =0;
         boolean find = false;
         int c = 0;
-			UnitGraphLen findgt = new UnitGraphLen();
+		UnitGraphLen findgt = new UnitGraphLen();
         UnitGraph findg[] = findgt.var;
-        FindPath[] fp = new FindPath[Max];
+        FindPath[] fp = new FindPath[apkuglen];
+        //initial the start & end in fp
+        for (int y = 0;y<apkuglen;y++)
+        	fp[y].Initial();
+        
         Unit tmpf;
 		int e = 0;
         
+		boolean start = false;
+		boolean end = false; // start and end to indicate path 
 		System.out.println("now to get the findg graph~~~");
-			int findgtlen = 0;
+		int findgtlen = 0;
  // find contain head from the specialinvoke unit
+		//since the arrary is not concret i use the boolean array to mark whether it is null or not
+		// so the length of the loop equals to the length of the graph array.
+		//ACTUALLY I SHOULD USE THE POINTER NOT THE ARRAY.....------TODO 
+		
 		for (i = 0; i< tgfh.ul;i++) {
 			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
 				if (c != i) {
+					System.out.println("now i is --"+i);
 					System.out.println("in the for to find target except the one");
 					System.out.println("c is "+c);
 					System.out.println("bl[c] is " +bl[c]);
 					System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
 					if (bl[c] == true && bs[c] == true && tgfh.specialtw[c] > 0) 
 					{
-						System.out.println("c is in this time is"+c);
+					System.out.println("c is in this time is"+c);
 					count = tgfh.specialtw[c];
 					System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
@@ -546,6 +557,7 @@ public class sootMain {
 					tmp2 = tmp.substring(14); //by observing
 					System.out.println("substring of the head:  "+tmp2.toString());
 					
+					// traverse the speciallist to find if it contains the head , if true add it to the findg
 					for (d = 0; d < count; d++)
 					
 					{
@@ -555,6 +567,8 @@ public class sootMain {
 							
 							find = true;
 							//the length of special list first dimensionality is equal to candidate.
+							System.out.println("the candidate is "+candidate[c].toString());
+							System.out.println("in this loop i is--"+i);
 							findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 							findgtlen ++;
 							System.out.println("find is true");
@@ -566,19 +580,32 @@ public class sootMain {
 					}
 					}
 
-				}
+				 }
 
 		    findgt.uglen = findgtlen;
 	    	//find cmd from find graphs
 			// if find , add these two to the findpath list;
 			// to judge if an apk has silent install equals to judge if the findpath is null
-	       
-		  boolean start = false;
-		  boolean end = false;
+	      
+		  System.out.println("after for the find is:"+find);
 		  if(find)
 		  {
+			System.out.println("this time i is:"+i);
+			//test the null graph
+			UnitGraph  tsts = null;
+			System.out.println("the test graph is :"+tsts);
+			
+			
 		    //fp[i].count ++;
+			
+			//System.out.println("before: the fp[i] is:"+ fp[i].start.toString());
+			//there always is a nullpointerexception ---- caused by the initialization....the parameter(body/method) should be null.....
+			//so think about how to initialize 
+			
+			System.out.println("the fp[i] is "+fp[i].start);
+			System.out.println("the findg is:"+findg[i].toString());
 	        fp[i].start = findg[i];
+	        System.out.println("after: the fp[i] is:"+fp[i].toString());
 	        //ignore these following note...
 	        //if doing in this way , the fp will not continuous...
 	        //maybe should build path from graph to unit...
@@ -586,6 +613,7 @@ public class sootMain {
 	        start = true;
 	        System.out.println("the start is true");
 		  }
+				//}
 		
 		System.out.println("now to build the findpath");//todo build path.....the following maybe wrong....
 		if (find)
@@ -623,6 +651,8 @@ public class sootMain {
 			fp[i].count = fp[i].count+1;
 		    System.out.println("the fp["+i+"].count is "+fp[i].count);
 		}
+		
+		find = false;
 	}
 		
 		System.out.println("----return findpah---");
