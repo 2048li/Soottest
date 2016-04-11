@@ -520,10 +520,11 @@ public class sootMain {
         int c = 0;
 		UnitGraphLen findgt = new UnitGraphLen();
         UnitGraph findg[] = findgt.var;
-        FindPath[] fp = new FindPath[apkuglen];
+        System.out.println("the tgfh.ul is "+tgfh.ul);
+        FindPath[] fp = new FindPath[tgfh.ul];
         //initial the start & end in fp
-        for (int y = 0;y<apkuglen;y++)
-        	fp[y].Initial();
+     //   for (int y = 0;y<tgfh.ul;y++)
+     //   	fp[y].Initial();
         
         Unit tmpf;
 		int e = 0;
@@ -602,9 +603,9 @@ public class sootMain {
 			//there always is a nullpointerexception ---- caused by the initialization....the parameter(body/method) should be null.....
 			//so think about how to initialize 
 			
-			System.out.println("the fp[i] is "+fp[i].start);
+		//	System.out.println("the fp[i] is "+fp[i].start);
 			System.out.println("the findg is:"+findg[i].toString());
-	        fp[i].start = findg[i];
+	        fp[i].start = findg[i]; // TODO --- i just do not know why null pointerexception.....
 	        System.out.println("after: the fp[i] is:"+fp[i].toString());
 	        //ignore these following note...
 	        //if doing in this way , the fp will not continuous...

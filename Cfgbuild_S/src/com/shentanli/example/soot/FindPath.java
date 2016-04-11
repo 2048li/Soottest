@@ -1,5 +1,8 @@
 package com.shentanli.example.soot;
 
+import java.util.List;
+
+import soot.SootClass;
 import soot.SootMethod;
 import soot.toolkits.graph.BriefUnitGraph;
 import soot.toolkits.graph.UnitGraph;
@@ -15,14 +18,17 @@ public class FindPath {
 	UnitGraph end;
 	int count = 0;
 
-	public static SootMethod FindPath(){
+	public SootMethod FindPatht(){
 		return null;
 		//unnecessary...
 		//what should be added??just think about it
 	}
 	
 	public void Initial(){
-		SootMethod sm = this.FindPath();
+		
+		SootClass sc = new SootClass("Testclass");
+		SootMethod sm = sc.getMethods().get(0);
+		
 		this.start = new BriefUnitGraph(sm.getActiveBody());
 		this.end = new BriefUnitGraph(sm.getActiveBody());
 		
