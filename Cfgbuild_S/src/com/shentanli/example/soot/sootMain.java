@@ -115,13 +115,16 @@ public class sootMain {
 		int q ;
 		boolean result = false;
 		System.out.println("now to set the result");
-		for (q=0;q<50;q++)
+		for (q=0;q<apkuglen;q++)
+		{
+		//	System.out.println("count is"+apkfp[q].count);
 			if (apkfp[q].count > 0) {
-				System.out.println("in the apkfg count cal");
+			//	System.out.println("in the apkfg count cal");
 				result = true;
-				System.out.println("to return result" + result);
+			//	System.out.println("to return result" + result);
 				return result;
 			}
+		}
 		return result;
 
 
@@ -373,7 +376,7 @@ public class sootMain {
 			for (SootMethod m:c.getMethods())
 			{
 				tmp = new BriefUnitGraph(m.getActiveBody());
-				System.out.println("the value of the var1 "+ i +tmp.toString());
+		//		System.out.println("the value of the var1 "+ i +tmp.toString());
 				if(tmp.toString().isEmpty()==false)
 				{
 				i=i+1;
@@ -409,46 +412,57 @@ public class sootMain {
 		Unit[][] speciall = tgfh.specialll;
 		boolean[] bl = new boolean[apkuglen];
 		boolean[] bs = new boolean[apkuglen];
+		//indicate the pm install unit
+		boolean[] pi = new boolean[apkuglen];
 		for (int tt = 0; tt<apkuglen;tt++)
 		{
 			bl[tt] = false;
 			bs[tt] = false;
+			pi[tt] = false;
 		}
+		
 		boolean nz = false;
 		System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
 		{
-			System.out.println("the ug[i] size is .."+ug[i].size());
+		//	System.out.println("the ug[i] size is .."+ug[i].size());
+		//.out.println("i is: " + i);
 			if (ug[i].size() > 0)
 			{
 			java.util.Iterator<Unit> it = ug[i].iterator();
-			System.out.println("now to get the head");
+		//	System.out.println("now to get the head");
 			gfh[i] = ug[i].getHeads().get(0);
 			while(it.hasNext())
 			{
 				
-				System.out.println("in the candidate find for");
+			//	System.out.println("in the candidate find for");
 				ut = it.next();
-				System.out.println("the  ut value:"+ut.toString());
+		//		System.out.println("the  ut value:"+ut.toString());
+				if (ut.toString().contains("pm install"))
+				{
+					pi[i] = true;
+					System.out.println("this graph has 'pm install' unit");
+					
+				}
 				//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
 				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime")) // if contains specialinvoke means that it is not the bottom 
 				{
-					System.out.println("in the runtime judge for");
+		//			System.out.println("in the runtime judge for");
 				//	if (candidate[i] != ug[i]){
 					    candidate[i] = ug[i];  //candidate is not concrete so if in for use the length of candidate may get the wrong result.
-					    System.out.println("set the candidate to ug[i]");
+		//			    System.out.println("set the candidate to ug[i]");
 				//	}
-					System.out.println("set the bl true");
+		//			System.out.println("set the bl true");
 					bl[i] = true; //actually do not think about this condition: the ug is the one that been invoked , in this case is the bodymethod itself. 
 					// so how to judge that the graph is the callee class??----if there is no other specialinvok, that means that the method of the class is the bottom.
-					System.out.println("i in candidate is "+i);
+		//			System.out.println("i in candidate is "+i);
 					//continue;
 				}
 				// to judge this graph contain specialinvoke
 				if (ut.toString().contains("specialinvoke"))
 				{
 					bs[i] = true;
-					System.out.println("unit contains specialinvoke and set true");
+				//	System.out.println("unit contains specialinvoke and set true");
 				}
 			}	
 			
@@ -459,7 +473,7 @@ public class sootMain {
 				if ( bl[i] ==  true && bs[i] == true) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
 				{
 					System.out.println("i is true and get the specialinvoke"+i);
-					System.out.println("get the specialinvoke");
+			//		System.out.println("get the specialinvoke");
 					java.util.Iterator<Unit> ttt = candidate[i].iterator();
 					while (ttt.hasNext())
 					{
@@ -471,16 +485,16 @@ public class sootMain {
 				   //  	System.out.println("the specialinvoke is "+ tut.toString());
 				     	j= j+1;
 				     	fi = fi+1;
-				     	System.out.println("j is "+j);
-				     	System.out.println("i is in this time is "+i);
+			//	     	System.out.println("j is "+j);
+			//	     	System.out.println("i is in this time is "+i);
 				    	speciall[i][j] = tut; // if so the speciall is not concrete...
 				    	//j++;
 				    	//fi++;
 				    	
 				    	tgfh.speicalfi[i] = fi;
 						tgfh.specialtw[i] = j;
-						System.out.println("i is "+ fi);
-						System.out.println("j is "+ j);
+			//			System.out.println("i is "+ fi);
+			//			System.out.println("j is "+ j);
 					//    }
 					   
 					}
@@ -490,18 +504,18 @@ public class sootMain {
 				}
 						
 			//}
-			System.out.println("the nz is true");
+	//		System.out.println("the nz is true");
 			nz = true;
 			}
 		}
         
 		if (nz= true)
 		{
-			System.out.println("to set the specialfi and tw count");
+		//	System.out.println("to set the specialfi and tw count");
 			tgfh.ul = i;//the length of the gfh
 		//	tgfh.speicalfi[i] = fi;//the first length of the speciall;actually this may be unnecessay: can use the boolean array to indicate whether the speical is null;
 		//	tgfh.specialtw[i] = j;//the secodn length of the speciall
-			System.out.println("the length of the gfh is "+ tgfh.ul);
+	//		System.out.println("the length of the gfh is "+ tgfh.ul);
 		//	System.out.println("i is "+ fi);
 		//	System.out.println("j is "+ j);
 			
@@ -544,7 +558,7 @@ public class sootMain {
 			end[se] = false;
 		}
 		
-		System.out.println("now to get the findg graph~~~");
+	//	System.out.println("now to get the findg graph~~~");
 		int findgtlen = 0;
  // find contain head from the specialinvoke unit
 		//since the arrary is not concret i use the boolean array to mark whether it is null or not
@@ -554,38 +568,38 @@ public class sootMain {
 		for (i = 0; i< tgfh.ul;i++) {
 			for (c = 0; c < tgfh.ul; c++) //find the target from the graphs except the one
 				if (c != i) {
-					System.out.println("now i is --"+i);
-					System.out.println("in the for to find target except the one");
-					System.out.println("c is "+c);
-					System.out.println("bl[c] is " +bl[c]);
-					System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
+		//			System.out.println("now i is --"+i);
+		//			System.out.println("in the for to find target except the one");
+		//			System.out.println("c is "+c);
+			//		System.out.println("bl[c] is " +bl[c]);
+			//		System.out.println("tgfh.specialtw[c] is "+ tgfh.specialtw[c]);
 					if (bl[c] == true && bs[c] == true && tgfh.specialtw[c] > 0) 
 					{
-					System.out.println("c is in this time is"+c);
+		//			System.out.println("c is in this time is"+c);
 					count = tgfh.specialtw[c];
-					System.out.println("the count of the speical[c]--"+count);
+		//			System.out.println("the count of the speical[c]--"+count);
 					tmp = gfh[c].toString().trim();
 					//cause that the head like this (after trim): $r0:=this:com.shentanli.silentinstall.Bodymethod
 					//and I just want to get the class name
-					System.out.println("the gfh  :"+tmp.toString());
+			//		System.out.println("the gfh  :"+tmp.toString());
 					tmp2 = tmp.substring(14); //by observing
-					System.out.println("substring of the head:  "+tmp2.toString());
+			//		System.out.println("substring of the head:  "+tmp2.toString());
 					
 					// traverse the speciallist to find if it contains the head , if true add it to the findg
 					for (d = 0; d < count; d++)
 					
 					{
 						
-						System.out.println("special arrary "+speciall[c][d].toString());
+				//		System.out.println("special arrary "+speciall[c][d].toString());
 						if (speciall[c][d].toString().isEmpty() == false && speciall[c][d].toString().contains(tmp2)) {
 							
 							find = true;
 							//the length of special list first dimensionality is equal to candidate.
-							System.out.println("the candidate is "+candidate[c].toString());
-							System.out.println("in this loop i is--"+i);
+					//		System.out.println("the candidate is "+candidate[c].toString());
+		//					System.out.println("in this loop i is--"+i);
 							findg[i] = candidate[c]; //add the found graph to the findgraph list, which then use to find cmd
 							findgtlen ++;
-							System.out.println("find is true");
+		//					System.out.println("find is true");
 							
 							
 							continue;
@@ -601,13 +615,13 @@ public class sootMain {
 			// if find , add these two to the findpath list;
 			// to judge if an apk has silent install equals to judge if the findpath is null
 	      
-		  System.out.println("after for the find is:"+find);
+		//  System.out.println("after for the find is:"+find);
 		  if(find)
 		  {
-			System.out.println("this time i is:"+i);
+	//		System.out.println("this time i is:"+i);
 			//test the null graph
-			UnitGraph  tsts = null;
-			System.out.println("the test graph is :"+tsts);
+		//	UnitGraph  tsts = null;
+		//	System.out.println("the test graph is :"+tsts);
 			
 			
 		    //fp[i].count ++;
@@ -617,47 +631,48 @@ public class sootMain {
 			//so think about how to initialize 
 			
 		//	System.out.println("the fp[i] is "+fp[i].start);
-			System.out.println("the findg is:"+findg[i].toString());
+		//	System.out.println("the findg is:"+findg[i].toString());
 	        fp[i].start = findg[i]; // TODO --- i just do not know why null pointerexception.....//fixed...
-	        System.out.println("after: the fp[i] is:"+fp[i].toString());
+	   //     System.out.println("after: the fp[i] is:"+fp[i].toString());
 	        //ignore these following note...
 	        //if doing in this way , the fp will not continuous...
 	        //maybe should build path from graph to unit...
 	       // fp[i].end = findg[i];
 	        start[i] = true;
-	        System.out.println("the start is true");
+	//        System.out.println("the start is true");
 		  }
 				//}
 		
-		System.out.println("now to build the findpath");//todo build path.....the following maybe wrong....
+	//	System.out.println("now to build the findpath");//todo build path.....the following maybe wrong....
 		if (find)
 	    //	for ( e = 0;e<findgt.uglen;e++) //the findgt.uglen may be wrong....
 			ok:
 			for (e = 0;e<tgfh.ul;e++)
 	    	{
 				
-	    		System.out.println("in the findgt for to get the end ");
+	   // 		System.out.println("in the findgt for to get the end ");
 	    		if (findg[e] != null)
 	    		{
-	    		System.out.println("the findg[e] is not null");
+	 //   		System.out.println("the findg[e] is not null");
 	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
 	    		{
 	    		//	System.out.println("traverse the findg unit");
 	    			if(end[i] == false) // should be the start& end array...
 	    			{
-	    			System.out.println("the end is false");
+	   // 			System.out.println("the end is false");
 	    			tmpf = tra.next();
-	    			System.out.println("the unit of the findg is:"+tmpf.toString());
-	    			if (tmpf.toString().isEmpty() == false/* && tmpf.toString().contains("install")*/)
+	    	//		System.out.println("the unit of the findg is:"+tmpf.toString());
+	    	//		if (tmpf.toString().isEmpty() == false/* && tmpf.toString().contains("install")*/)
+	    			if (tmpf.toString().isEmpty() == false && pi[e] == true | tmpf.toString().isEmpty() == false && tmpf.toString().contains("pm install")) //actually the pm install should be contained in the original graph or the findg//TODO
 	    			{
 	    				//how to add to findpath??
 	    				//fp[i].count ++;
 	    				//fp[i].start = findg[i];
 	    				fp[i].end = ug[i];
-	    				end[i] = true;
-	    				System.out.println("the end is true");
-	    				System.out.println("now to break");
+	    				end[e] = true;
+	  //  				System.out.println("the end is true");
+	 //   				System.out.println("now to break");
 	    				break ok;
 	    				//fp[i].end = findg[e];
 	    			}
@@ -666,14 +681,15 @@ public class sootMain {
 	    		}
 	    	}
 	    	}		
-		System.out.println("now to set the findpath count");
-		System.out.println("find is"+find);
-		System.out.println("start[i] is"+start[i]);
-		System.out.println("end[i] is"+end[i]);
+//		System.out.println("now to set the findpath count");
+//		System.out.println("find is"+find);
+//		System.out.println("start[i] is"+start[i]);
+//		System.out.println("end[i] is"+end[i]);
 		if (find && start[i] && end[i])
 		{
+			System.out.println("!in the count count");
 			fp[i].count = fp[i].count+1;
-		    System.out.println("the fp["+i+"].count is "+fp[i].count);
+//		    System.out.println("the fp["+i+"].count is "+fp[i].count);
 		}
 		
 		find = false;
