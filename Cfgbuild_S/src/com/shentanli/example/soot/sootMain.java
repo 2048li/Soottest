@@ -533,8 +533,17 @@ public class sootMain {
         Unit tmpf;
 		int e = 0;
         
-		boolean start = false;
-		boolean end = false; // start and end to indicate path 
+		//boolean start = false;
+		//boolean end = false; // start and end to indicate path 
+		// they should be arraies
+		boolean[] start = new boolean[tgfh.ul];
+		boolean[] end = new boolean[tgfh.ul];
+		for (int se = 0; se<tgfh.ul;se++)
+		{
+			start[se] = false;
+			end[se] = false;
+		}
+		
 		System.out.println("now to get the findg graph~~~");
 		int findgtlen = 0;
  // find contain head from the specialinvoke unit
@@ -615,7 +624,7 @@ public class sootMain {
 	        //if doing in this way , the fp will not continuous...
 	        //maybe should build path from graph to unit...
 	       // fp[i].end = findg[i];
-	        start = true;
+	        start[i] = true;
 	        System.out.println("the start is true");
 		  }
 				//}
@@ -623,6 +632,7 @@ public class sootMain {
 		System.out.println("now to build the findpath");//todo build path.....the following maybe wrong....
 		if (find)
 	    //	for ( e = 0;e<findgt.uglen;e++) //the findgt.uglen may be wrong....
+			ok:
 			for (e = 0;e<tgfh.ul;e++)
 	    	{
 				
@@ -634,19 +644,21 @@ public class sootMain {
 	    		while(tra.hasNext())
 	    		{
 	    		//	System.out.println("traverse the findg unit");
-	    			if(end == false)
+	    			if(end[i] == false) // should be the start& end array...
 	    			{
 	    			System.out.println("the end is false");
 	    			tmpf = tra.next();
 	    			System.out.println("the unit of the findg is:"+tmpf.toString());
-	    			if (tmpf.toString().isEmpty() == false && tmpf.toString().contains("install"))
+	    			if (tmpf.toString().isEmpty() == false/* && tmpf.toString().contains("install")*/)
 	    			{
 	    				//how to add to findpath??
 	    				//fp[i].count ++;
 	    				//fp[i].start = findg[i];
 	    				fp[i].end = ug[i];
-	    				end = true;
+	    				end[i] = true;
 	    				System.out.println("the end is true");
+	    				System.out.println("now to break");
+	    				break ok;
 	    				//fp[i].end = findg[e];
 	    			}
 	    			}
@@ -655,15 +667,16 @@ public class sootMain {
 	    	}
 	    	}		
 		System.out.println("now to set the findpath count");
-		if (find && start && end)
+		System.out.println("find is"+find);
+		System.out.println("start[i] is"+start[i]);
+		System.out.println("end[i] is"+end[i]);
+		if (find && start[i] && end[i])
 		{
 			fp[i].count = fp[i].count+1;
 		    System.out.println("the fp["+i+"].count is "+fp[i].count);
 		}
 		
 		find = false;
-		start =false;
-		end = false;
 	}
 		
 		System.out.println("----return findpah---");
