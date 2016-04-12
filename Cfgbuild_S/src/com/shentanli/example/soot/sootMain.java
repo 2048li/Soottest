@@ -522,9 +522,13 @@ public class sootMain {
         UnitGraph findg[] = findgt.var;
         System.out.println("the tgfh.ul is "+tgfh.ul);
         FindPath[] fp = new FindPath[tgfh.ul];
+        
         //initial the start & end in fp
-     //   for (int y = 0;y<tgfh.ul;y++)
-     //   	fp[y].Initial();
+        for (int y = 0;y<tgfh.ul;y++)
+        {
+        	fp[y] = new FindPath();
+        	//fp[y].Initial();
+        }
         
         Unit tmpf;
 		int e = 0;
@@ -605,7 +609,7 @@ public class sootMain {
 			
 		//	System.out.println("the fp[i] is "+fp[i].start);
 			System.out.println("the findg is:"+findg[i].toString());
-	        fp[i].start = findg[i]; // TODO --- i just do not know why null pointerexception.....
+	        fp[i].start = findg[i]; // TODO --- i just do not know why null pointerexception.....//fixed...
 	        System.out.println("after: the fp[i] is:"+fp[i].toString());
 	        //ignore these following note...
 	        //if doing in this way , the fp will not continuous...
@@ -625,13 +629,17 @@ public class sootMain {
 	    		System.out.println("in the findgt for to get the end ");
 	    		if (findg[e] != null)
 	    		{
+	    		System.out.println("the findg[e] is not null");
 	    		java.util.Iterator<Unit> tra = findg[e].iterator();
 	    		while(tra.hasNext())
 	    		{
+	    		//	System.out.println("traverse the findg unit");
 	    			if(end == false)
 	    			{
+	    			System.out.println("the end is false");
 	    			tmpf = tra.next();
-	    			if (tmpf.toString().isEmpty() == false && tmpf.toString().contains("pm install"))
+	    			System.out.println("the unit of the findg is:"+tmpf.toString());
+	    			if (tmpf.toString().isEmpty() == false && tmpf.toString().contains("install"))
 	    			{
 	    				//how to add to findpath??
 	    				//fp[i].count ++;
@@ -654,6 +662,8 @@ public class sootMain {
 		}
 		
 		find = false;
+		start =false;
+		end = false;
 	}
 		
 		System.out.println("----return findpah---");
