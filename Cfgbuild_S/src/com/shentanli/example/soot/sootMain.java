@@ -478,12 +478,12 @@ public class sootMain {
 					while (ttt.hasNext())
 					{
 						Unit tut = ttt.next();
-						System.out.println("the unit from ttt is "+ tut.toString());
+					//	System.out.println("the unit from ttt is "+ tut.toString());
 					//    if (tut.toString().contains("specialinvoke") )
 					//    {
 				    // 	System.out.println("get the specialinvoke");
 				   //  	System.out.println("the specialinvoke is "+ tut.toString());
-				     	j= j+1;
+				     	j = j+1;
 				     	fi = fi+1;
 			//	     	System.out.println("j is "+j);
 			//	     	System.out.println("i is in this time is "+i);
@@ -666,7 +666,7 @@ public class sootMain {
 	    	//		if (tmpf.toString().isEmpty() == false/* && tmpf.toString().contains("install")*/)
 	    			if (tmpf.toString().isEmpty() == false && pi[e] == true | tmpf.toString().isEmpty() == false && tmpf.toString().contains("pm install")) //actually the pm install should be contained in the original graph or the findg//TODO
 	    			{
-	    				//how to add to findpath??
+	    				
 	    				//fp[i].count ++;
 	    				//fp[i].start = findg[i];
 	    				fp[i].end = ug[i];
