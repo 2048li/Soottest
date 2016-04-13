@@ -1,24 +1,25 @@
 package com.shentanli.example.soot;
 
+import java.util.ArrayList;
+
 import soot.toolkits.graph.UnitGraph;
 
 public class UnitGraphLen {
 	
-	int Max = 50000;
-	UnitGraph var[] = new UnitGraph[Max]; 
+	ArrayList<UnitGraph> graphs;
 	
-	int uglen = 0;
-	
-	public UnitGraph[] UnitAInitial()
-	{
-		UnitGraph var1[] = this.var;
-		for (int i = 0; i<Max; i++){
-			var[i] = null;
-		}
-		return var1;
-	}
 	public void UnitGraphLen(){
+		graphs = new ArrayList<UnitGraph>();
 		
+		
+	}
+	public void addGraph(UnitGraph ug)
+	{
+		graphs.add(ug);
+	}
+	public int getLen()
+	{
+		return graphs.size();
 	}
 
 }
