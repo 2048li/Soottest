@@ -70,15 +70,20 @@ public class sootMain {
 	//get apkname string found in the given path
 	public static List<String> Getapk(String path, List<String> data)
 	{
+		System.out.println("now to get apk list");
 		int i ;
 		File f = new File(path);
 		File[] fs = f.listFiles();
 		int len = f.listFiles().length;
+		String tmp = new String();
 		for (i =0;i<len;i++)
 		{
 			if (fs[i].getName().endsWith(".apk"))
 			{
-				data.add(fs[i].getName());
+			//	System.out.println("get apk");
+				tmp = path + "/" +fs[i].getName();
+			//	System.out.println("the complete apkname is:"+tmp);
+				data.add(tmp);
 			}
 		}
 		
@@ -121,9 +126,13 @@ public class sootMain {
 		
 		for (i=0; i < data.size(); i++)
 		{
+			System.out.println("the apkname is:"+data.get(i));
+			System.out.println("now to set this apk as input");
 			inialiseSoot(data.get(i));
+			System.out.println("inialise soot done,then to detect...");
 			PackManager.v().getPack("wjtp").apply();
 			PackManager.v().runPacks();
+			System.out.println("to call issilentinstallapk");
 			detect = isSilentInstallapk();
 			if (detect)
 				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
@@ -444,6 +453,8 @@ public class sootMain {
 		for (SootClass c:Scene.v().getApplicationClasses())	
 			for (SootMethod m:c.getMethods())
 			{
+				if (m.hasActiveBody())
+				{
 				tmp = new BriefUnitGraph(m.getActiveBody());
 		//		System.out.println("the value of the var1 "+ i +tmp.toString());
 				if(tmp.toString().isEmpty()==false)
@@ -451,6 +462,7 @@ public class sootMain {
 				i=i+1;
 				var[i] = tmp;
 				
+				}
 				}
 			}
 		var1.uglen = i;
