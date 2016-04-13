@@ -438,7 +438,7 @@ public class sootMain {
 	}
 	
 	
-	static int Max = 5000;
+	static int Max = 50000;
 	//get the graph list of the apk[each method in each class]
 	static UnitGraphLen ufgl(UnitGraphLen var1)
 	{
@@ -553,7 +553,7 @@ public class sootMain {
 				
 				if ( bl[i] ==  true && bs[i] == true) //&& /* ut.toString().isEmpty() == false && */ ut.toString().contains("specialinvoke"))
 				{
-					System.out.println("i is true and get the specialinvoke"+i);
+				//	System.out.println("i is true and get the specialinvoke"+i);
 			//		System.out.println("get the specialinvoke");
 					java.util.Iterator<Unit> ttt = candidate[i].iterator();
 					while (ttt.hasNext())

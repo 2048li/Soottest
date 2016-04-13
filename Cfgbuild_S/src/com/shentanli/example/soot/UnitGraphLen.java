@@ -4,7 +4,7 @@ import soot.toolkits.graph.UnitGraph;
 
 public class UnitGraphLen {
 	
-	int Max = 5000;
+	int Max = 50000;
 	UnitGraph var[] = new UnitGraph[Max]; 
 	
 	int uglen = 0;
