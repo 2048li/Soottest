@@ -1,5 +1,9 @@
 package com.shentanli.example.soot;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,9 +44,10 @@ public class sootMain {
 	//private String force_android_jar = "android.jar";
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
-	private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
-
-	public static void inialiseSoot()
+	//private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
+   
+	private String appAPK;
+	public static void inialiseSoot(String appAPK)
 	{
 		if (SOOT_INITIALIZED)
 			return;
@@ -62,14 +67,78 @@ public class sootMain {
 		
 	}
 	
+	//get apkname string found in the given path
+	public static List<String> Getapk(String path, List<String> data)
+	{
+		int i ;
+		File f = new File(path);
+		File[] fs = f.listFiles();
+		int len = f.listFiles().length;
+		for (i =0;i<len;i++)
+		{
+			if (fs[i].getName().endsWith(".apk"))
+			{
+				data.add(fs[i].getName());
+			}
+		}
+		
+		return data;
+		
+	}
+	
+	//to apply this method to apk set; set the env cyclically. 
+	@SuppressWarnings("unchecked")
+	public static List<String> Setenv(){
+		//to get the path from user
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String str = null;
+		
+		List data = new ArrayList<String>();
+		
+		try {
+			System.out.println("Please enter your apk set path:");
+			str = br.readLine();
+			data = Getapk(str,data);	
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
+		
+		
+	}
+	
+	
 	public static void main (String[] args)
 	{
-		inialiseSoot();
+		//inialiseSoot();
+		
+		List<String> data = new ArrayList<String>();
+		data = Setenv();
+		int i;
+		boolean detect = false;
+		
+		for (i=0; i < data.size(); i++)
+		{
+			inialiseSoot(data.get(i));
+			PackManager.v().getPack("wjtp").apply();
+			PackManager.v().runPacks();
+			detect = isSilentInstallapk();
+			if (detect)
+				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
+			else
+				System.out.println("this apk:"+data.get(i)+"may not has silent install");		
+			
+		}
+		
+		
+		
 
 		// the following codes are used to plugin 
 	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
 
-		System.out.println("now to run packmanager.apply");
+	/*	System.out.println("now to run packmanager.apply");
 		PackManager.v().getPack("wjtp").apply();
 
 		PackManager.v().runPacks();
@@ -82,7 +151,7 @@ public class sootMain {
 		if (detect)
 			System.out.println("this apk mostly has silent install");
 		else
-			System.out.println("this apk may not has silent install");
+			System.out.println("this apk may not has silent install"); */
 		
 		//PackManager.v().writeOutput();
 	//	PackManager.v().getPack("cg").apply();
@@ -95,11 +164,11 @@ public class sootMain {
 	//judge the apk
 	public static boolean isSilentInstallapk()
 	{
-		System.out.println("to call the ufgl");
+	//	System.out.println("to call the ufgl");
 		UnitGraphLen var1 = new UnitGraphLen(); 
 		UnitGraph[] apkug = ufgl(var1).var;
 		int apkuglen = ufgl(var1).uglen;
-		System.out.println("the length of the ufgl is "+ apkuglen);
+	//	System.out.println("the length of the ufgl is "+ apkuglen);
 		
 	/*	for (int i = 0;i<apkuglen;i++)
 		{
@@ -110,11 +179,11 @@ public class sootMain {
 			}
 		}
 	*/
-		System.out.println("to call the dectgraph");
+	//	System.out.println("to call the dectgraph");
 		FindPath[] apkfp = Dectgraph(apkug,apkuglen);
 		int q ;
 		boolean result = false;
-		System.out.println("now to set the result");
+	//	System.out.println("now to set the result");
 		for (q=0;q<apkuglen;q++)
 		{
 		//	System.out.println("count is"+apkfp[q].count);
@@ -364,8 +433,8 @@ public class sootMain {
 	//get the graph list of the apk[each method in each class]
 	static UnitGraphLen ufgl(UnitGraphLen var1)
 	{
-		System.out.println("the varlebn is "+ var1.uglen);
-		System.out.println("in the ufgl method and to get UnitGraph array");
+	//	System.out.println("the varlebn is "+ var1.uglen);
+	//	System.out.println("in the ufgl method and to get UnitGraph array");
 		//UnitGraphLen var1 = new UnitGraphLen(); 
 		
 		UnitGraph var[] = var1.var;
@@ -385,9 +454,9 @@ public class sootMain {
 				}
 			}
 		var1.uglen = i;
-		System.out.println(" uglen is "+var1.uglen);
-		System.out.println("the i is "+i);
-		System.out.println("now to return--");
+	//	System.out.println(" uglen is "+var1.uglen);
+	//	System.out.println("the i is "+i);
+	//	System.out.println("now to return--");
 		return var1;
 		
 	}
@@ -395,8 +464,8 @@ public class sootMain {
 	//traverse graph list to find target graph
 	static FindPath[] Dectgraph(UnitGraph[] ug, int apkuglen)
 	{
-		System.out.println("in the Dectgraph method---");
-		System.out.println("the length of the unitgraph is :"+apkuglen);
+	//	System.out.println("in the Dectgraph method---");
+	//	System.out.println("the length of the unitgraph is :"+apkuglen);
 		if (apkuglen != 0)
 		{
 	//	int len = ug.length;
@@ -422,7 +491,7 @@ public class sootMain {
 		}
 		
 		boolean nz = false;
-		System.out.println("to get head of graphs and candidate graphs~~~");
+	//	System.out.println("to get head of graphs and candidate graphs~~~");
 		for (i=0;i<apkuglen;i++)
 		{
 		//	System.out.println("the ug[i] size is .."+ug[i].size());
