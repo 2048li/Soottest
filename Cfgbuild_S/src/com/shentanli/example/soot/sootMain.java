@@ -49,22 +49,24 @@ public class sootMain {
 	private String appAPK;
 	public static void inialiseSoot(String appAPK)
 	{
-		if (SOOT_INITIALIZED)
-			return;
+	//	if (SOOT_INITIALIZED)
+	//		return;
 		Options.v().set_allow_phantom_refs(true);
 		Options.v().set_prepend_classpath(true);
 		Options.v().set_validate(true);
 		Options.v().set_output_format(Options.output_format_jimple);
+		System.out.println("setprocessdir:"+Collections.singletonList(appAPK).toString());
 		Options.v().set_process_dir(Collections.singletonList(appAPK));
 		Options.v().set_force_android_jar(androidJAR);
 		Options.v().set_src_prec(Options.src_prec_apk);
-		Options.v().set_soot_classpath(androidJAR);
+		System.out.println("apkname----"+appAPK);
+		Options.v().set_soot_classpath(androidJAR+":"+appAPK);
 		Options.v().set_whole_program(true);
-		
+	
 		
 		//Scene.v().addBasicClass(android.widget.TextView,BODIES);
 		Scene.v().loadNecessaryClasses();
-		SOOT_INITIALIZED = true;	
+	//	SOOT_INITIALIZED = true;	
 		
 	}
 	
@@ -139,11 +141,13 @@ public class sootMain {
 		//inialiseSoot();
 		
 		List<String> data = new ArrayList<String>();
-		data = Setenv();
+	//	data = Setenv();
 		int i;
 		boolean detect = false;
 		
-	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
+		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
+		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/baibeitingting.apk");
+		
 		
 		for (i=0; i < data.size(); i++)
 		{
@@ -456,6 +460,7 @@ public class sootMain {
 		
 	//	UnitGraph tmp ;
 		ArrayList<UnitGraph> graphs = new ArrayList<UnitGraph>();
+		System.out.println("applicationclasses is :"+Scene.v().getApplicationClasses().toString());
 	   
 		for (SootClass c:Scene.v().getApplicationClasses())	
 			for (SootMethod m:c.getMethods())
