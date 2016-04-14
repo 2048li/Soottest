@@ -61,6 +61,7 @@ public class sootMain {
 		Options.v().set_soot_classpath(androidJAR);
 		Options.v().set_whole_program(true);
 		
+		
 		//Scene.v().addBasicClass(android.widget.TextView,BODIES);
 		Scene.v().loadNecessaryClasses();
 		SOOT_INITIALIZED = true;	
@@ -125,7 +126,7 @@ public class sootMain {
 	static UnitGraph var[];
 	static UnitGraph tmp;
 	static UnitGraph[] candidate;
-	static UnitLen tgfh = new UnitLen();
+//	static UnitLen tgfh = new UnitLen();
 	static UnitGraphLen findgt = new UnitGraphLen();
    
 	
@@ -533,6 +534,7 @@ public class sootMain {
 				 String scut = specialunits.get(i).toString().trim();
 				 String hcut = ug.getHeads().get(0).toString();
 			//	 System.out.println("hcut=="+ug.getHeads().get(0));
+			//	 System.out.println("scut=="+specialunits.get(i));
 				 int left = scut.indexOf('<');
 				 int rigth = scut.indexOf(':',left<0 ?0:left);
 				 if (left <0 || rigth <0)
@@ -546,7 +548,7 @@ public class sootMain {
 
 				 
 				 if (hcut.contains(scut)){
-					 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug))
+					 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
 					     return true;
 				 }
 				 
