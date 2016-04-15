@@ -30,7 +30,7 @@ import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.toolkits.graph.UnitGraph;
 
 public class sootMain {
-	private static boolean SOOT_INITIALIZED = false;
+
 	//private final static String androidJAR = "android.jar";
 
 	//private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
@@ -49,8 +49,7 @@ public class sootMain {
 	private String appAPK;
 	public static void inialiseSoot(String appAPK)
 	{
-	//	if (SOOT_INITIALIZED)
-	//		return;
+	
 		Options.v().set_allow_phantom_refs(true);
 		Options.v().set_prepend_classpath(true);
 		Options.v().set_validate(true);
@@ -60,14 +59,11 @@ public class sootMain {
 		Options.v().set_force_android_jar(androidJAR);
 		Options.v().set_src_prec(Options.src_prec_apk);
 		System.out.println("apkname----"+appAPK);
-		Options.v().set_soot_classpath(androidJAR+":"+appAPK);
+		Options.v().set_soot_classpath(androidJAR);
 		Options.v().set_whole_program(true);
-	
-		
-		//Scene.v().addBasicClass(android.widget.TextView,BODIES);
+		Scene.v().allowsPhantomRefs();
 		Scene.v().loadNecessaryClasses();
-	//	SOOT_INITIALIZED = true;	
-		
+
 	}
 	
 	//get apkname string found in the given path
@@ -131,10 +127,7 @@ public class sootMain {
 //	static UnitLen tgfh = new UnitLen();
 	static UnitGraphLen findgt = new UnitGraphLen();
    
-	
-	
-	
-	
+
 	
 	public static void main (String[] args)
 	{
@@ -151,14 +144,19 @@ public class sootMain {
 		
 		for (i=0; i < data.size(); i++)
 		{
+			
 			System.out.println("the apkname is:"+data.get(i));
 			System.out.println("now to set this apk as input");
 			inialiseSoot(data.get(i));
+			soot.Main.main(args); // restart to set scene in soot
 			System.out.println("inialise soot done,then to detect...");
+			MyAnalysis manalysis = new MyAnalysis();
+			PackManager.v().getPack("wjtp").add(new Transform("wjtp.myanalysis", manalysis));
 			PackManager.v().getPack("wjtp").apply();
 			PackManager.v().runPacks();
 			System.out.println("to call issilentinstallapk");
-			detect = isSilentInstallapk();
+		//	detect = isSilentInstallapk();
+			detect = manalysis.detect;
 			if (detect)
 				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
 			else
@@ -193,6 +191,7 @@ public class sootMain {
 		
 		//soot.Main.main(args);
 	}
+	
 	
 	
 	//judge the apk

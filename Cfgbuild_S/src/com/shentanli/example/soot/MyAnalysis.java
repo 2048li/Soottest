@@ -1,5 +1,6 @@
 package com.shentanli.example.soot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,122 +21,166 @@ import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.Jimple;
 import soot.jimple.StringConstant;
+import soot.toolkits.graph.BriefUnitGraph;
+import soot.toolkits.graph.UnitGraph;
 
 public class MyAnalysis extends BodyTransformer{
+	
+	
+	static UnitGraph tmp;
+	boolean detect = false;
 
 	@Override
 	protected void internalTransform(Body body, String phase, Map options) {
 		// TODO Auto-generated method stub
-		for (SootClass c:Scene.v().getApplicationClasses())
+	
+		detect = isSilentInstallapk();
+		}
+
+	//judge the apk
+		public static boolean isSilentInstallapk()
 		{
-			//System.out.println("sootclass "+ c);			
+		//	System.out.println("to call the ufgl");
+		//	UnitGraphLen var1 = new UnitGraphLen(); 
+			ArrayList<UnitGraph> graphs = getGraphListOfApk();
+			return DectGraph(graphs);
+
+		}
+		
+		
+		static ArrayList<UnitGraph> getGraphListOfApk()
+		{
+		//	System.out.println("the varlebn is "+ var1.uglen);
+		//	System.out.println("in the ufgl method and to get UnitGraph array");
+			//UnitGraphLen var1 = new UnitGraphLen(); 
 			
-			for (SootMethod m:c.getMethods())
-			{
-				if (m.isConcrete())
-				//if (!m.isJavaLibraryMethod())
+		//	UnitGraph tmp ;
+			ArrayList<UnitGraph> graphs = new ArrayList<UnitGraph>();
+			System.out.println("applicationclasses is :"+Scene.v().getApplicationClasses().toString());
+		   
+			for (SootClass c:Scene.v().getApplicationClasses())	
+				for (SootMethod m:c.getMethods())
 				{
-					Body b = m.retrieveActiveBody();
-				//	List<ValueBox> vale = b.getDefBoxes();					
-				//	List<Value> pararef = b.getParameterRefs();
-				//	String[] y = pararef.toArray(new String[0]);
-				//	int len = y.length;
-				/*	int len = vale.size();
-					for (int i = 0;i<len;i++)
+					if (m.hasActiveBody())
 					{
-						String tmp = vale.get(i).toString();
-						//System.out.println("pararef--"+y[i]);
-						System.out.println("boxvalue ---"+tmp);
-					} */
-					String valuename = "pm install";
-					String methodname = "exec";
-					boolean l1 = judgestrvalue(valuename, b);
-					boolean l2 = judgemethod(methodname, b);
-						
-					/*	if (l1 && l2)
-						{
-							System.out.println("both pminstall and getruntime body");
-						}
-						*/
-					if (l2)
-						System.out.println("getruntime method");
-					}
+				    	tmp = new BriefUnitGraph(m.getActiveBody());
+			//		System.out.println("the value of the var1 "+ i +tmp.toString());
+				    	if(tmp.toString().isEmpty()==false)
+				    	{
+				        	
+				        	graphs.add(tmp);
 					
-	
-				}
-			}
-		}
-
-	
-	public boolean judgestrvalue(String valuename, Body b)
-	{
-		java.util.Iterator<Unit> i = b.getUnits().snapshotIterator();
-		boolean result = false;
-		while(i.hasNext())
-		{
-			Unit u = i.next();
-			List usebox = u.getUseAndDefBoxes();
-			int len = usebox.size();
-				for (int count = 0;count<len;count++)
-				{
-					if (usebox.get(count).toString().indexOf(valuename) != -1){
-						result = true;
-					    System.out.println("---contains pm install--"+usebox.get(count));	
+			     		}
 					}
-						
 				}
-				
-			}
-		return result;
-		
-		//get the value
-		/*	for (Unit ut: b.getUnits())
-			{
-				for (ValueBox vb : ut.getUseBoxes())
-					if (vb.getValue().equals("pm install"))
-						System.out.println("value--"+vb.getValue().toString());
-			}*/
-		
-		 /*  	while(i.hasNext())
-		{
-			Unit u = i.next();
-			List usebox = u.getUseBoxes();
-		    int len = usebox.size();
-		    
-			for (int count = 0;count<len;count++) 
-			{
-				if (usebox.get(count).toString().indexOf("pm install") != -1){
-					l1 = true;
-					//System.out.println("usebox value--"+usebox.get(count));
-				}
-				//System.out.println("usebox value--"+usebox.get(count));
-			}*/
-	}
-     
-	public boolean judgemethod(String methodname, Body b)
-	{
-		boolean result = false;
-
-		java.util.Iterator<Unit> i = b.getUnits().snapshotIterator();
-		Unit u = i.next();
-		
-		if (u.toString().indexOf(methodname) != -1)
-		{
-			System.out.println("***unit contains method"+u.toString());  
-			result = true;
+			return graphs;
 			
 		}
-		//else
-		//	System.out.println("no the method you search");
-		return result;
 		
 		
-		//another way
+		static boolean  ContainsRun(UnitGraph ug)
+		{
+			 
+			if (ug.size() <= 0)
+				return false;
+				
+			java.util.Iterator<Unit> it = ug.iterator();
+
+			while(it.hasNext())
+			{
+				Unit ut = it.next();
+
+				//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
+				if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime")) // if contains specialinvoke means that it is not the bottom 
+				{
 		
-	}
-	
-	
-	}
+					   return true;  //candidate is not concrete so if in for use the length of candidate may get the wrong result.
+
+				}
+		
+			}	
+			
+			return false;
+		
+		}
+		
+		
+		//traverse graph list to find target graph
+		static boolean DectGraph(ArrayList<UnitGraph> graphs)
+		{
+			System.out.println("in the Dectgraph method---");
+		//	System.out.println("the length of the unitgraph is :"+apkuglen);
+			if (graphs.size() != 0)
+			{
+			
+			ArrayList<Unit> specialunits = new ArrayList<Unit>();
+			ArrayList<UnitGraph> specialgraphs = new ArrayList<UnitGraph>();
+			 for (UnitGraph ug: graphs)
+			 {
+				 if(ContainsRun(ug))
+				 {
+					 AddSpecialUnits(ug, specialunits, specialgraphs);
+					 
+				 }
+			 }
+			 for(int i = 0;i<specialunits.size();i++){
+				 for (UnitGraph ug : graphs)
+				 {
+					 String scut = specialunits.get(i).toString().trim();
+					 String hcut = ug.getHeads().get(0).toString();
+				//	 System.out.println("hcut=="+ug.getHeads().get(0));
+				//	 System.out.println("scut=="+specialunits.get(i));
+					 int left = scut.indexOf('<');
+					 int rigth = scut.indexOf(':',left<0 ?0:left);
+					 if (left <0 || rigth <0)
+					 {
+						 System.out.println("left-"+hcut);
+						 System.out.println("scut-"+scut);
+						 continue;
+					 }
+					 scut = scut.substring(left+1, rigth);
+					// System.out.println("scut--"+scut);
+
+					 
+					 if (hcut.contains(scut)){
+						 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
+						     return true;
+					 }
+					 
+					 
+				 }
+				 
+			 }
+			 return false;
+			
+			}
+			return false;
+				
+		}
+
+		private static boolean ContainsInstall(UnitGraph unitGraph) {
+			// TODO Auto-generated method stub
+			for (Unit u: unitGraph)
+				if (u.toString().isEmpty() == false && u.toString().contains("pm install"))
+					return true;
+			
+			return false;
+		}
+
+		private static void AddSpecialUnits(UnitGraph ug,
+				ArrayList<Unit> specialunits, ArrayList<UnitGraph> specialgraphs) {
+			// TODO Auto-generated method stub
+			for (Unit u : ug)
+			{
+				if (u.toString().isEmpty() == false && u.toString().contains("specialinvoke")){
+					specialunits.add(u);
+					specialgraphs.add(ug);
+				}
+				 
+			}
+
+	}	
+}
 	
 
 
