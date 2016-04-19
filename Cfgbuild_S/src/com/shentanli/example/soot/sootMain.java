@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 import soot.Body;
+import soot.G;
 import soot.MethodOrMethodContext;
 import soot.PackManager;
 import soot.Scene;
@@ -45,6 +46,8 @@ public class sootMain {
 	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
 	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
 	//private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
+
+	//private static final int SIGNATURES = 1;
    
 	private String appAPK;
 	public static void inialiseSoot(String appAPK)
@@ -62,7 +65,12 @@ public class sootMain {
 		Options.v().set_soot_classpath(androidJAR);
 		Options.v().set_whole_program(true);
 		Scene.v().allowsPhantomRefs();
+		//G.reset();
+		
+	//	Scene.v().addBasicClass("android.support.v4.view.ViewPager$SimpleOnPageChangeListener",SootClass.SIGNATURES);
+	//	Scene.v().addBasicClass("android.support.v4.view.ViewPager$MyAccessibilityDelegate",SootClass.SIGNATURES);
 		Scene.v().loadNecessaryClasses();
+		
 
 	}
 	
@@ -132,35 +140,47 @@ public class sootMain {
 	public static void main (String[] args)
 	{
 		//inialiseSoot();
+		long begin = System.currentTimeMillis();
 		
 		List<String> data = new ArrayList<String>();
 	//	data = Setenv();
 		int i;
 		boolean detect = false;
+	/*	String str = args[0];
+	
+		data.add(str);
+		System.out.println("add "+str +" to soot sucess"); */
 		
-		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
-		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/baibeitingting.apk");
+		
+		
+	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
+		data.add("/home/shentanli/Downloads/appsdb/appsfrom360store/com-letv.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
 		{
 			
-			System.out.println("the apkname is:"+data.get(i));
-			System.out.println("now to set this apk as input");
+		//	System.out.println("the apkname is:"+data.get(i));
+		//	System.out.println("now to set this apk as input");
+	//		soot.Main.main(args); // restart to set scene in soot
 			inialiseSoot(data.get(i));
-			soot.Main.main(args); // restart to set scene in soot
+		
 			System.out.println("inialise soot done,then to detect...");
-			MyAnalysis manalysis = new MyAnalysis();
-			PackManager.v().getPack("wjtp").add(new Transform("wjtp.myanalysis", manalysis));
+		//	MyAnalysis manalysis = new MyAnalysis();
+		//	PackManager.v().getPack("wjtp").add(new Transform("wjtp.myanalysis", manalysis));
 			PackManager.v().getPack("wjtp").apply();
 			PackManager.v().runPacks();
+			
+			
 			System.out.println("to call issilentinstallapk");
-		//	detect = isSilentInstallapk();
-			detect = manalysis.detect;
+			detect = isSilentInstallapk();
+		//	detect = manalysis.detect;
+			
 			if (detect)
 				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
 			else
 				System.out.println("this apk:"+data.get(i)+"may not has silent install");		
+			System.out.println("Spend time:"+(System.currentTimeMillis()-begin));
 			
 		}
 		
@@ -459,7 +479,7 @@ public class sootMain {
 		
 	//	UnitGraph tmp ;
 		ArrayList<UnitGraph> graphs = new ArrayList<UnitGraph>();
-		System.out.println("applicationclasses is :"+Scene.v().getApplicationClasses().toString());
+	//	System.out.println("applicationclasses is :"+Scene.v().getApplicationClasses().toString());
 	   
 		for (SootClass c:Scene.v().getApplicationClasses())	
 			for (SootMethod m:c.getMethods())
@@ -533,6 +553,7 @@ public class sootMain {
 			 }
 		 }
 		 for(int i = 0;i<specialunits.size();i++){
+			 System.out.println("size of specialunits is:"+specialunits.size());
 			 for (UnitGraph ug : graphs)
 			 {
 				 String scut = specialunits.get(i).toString().trim();
@@ -543,8 +564,8 @@ public class sootMain {
 				 int rigth = scut.indexOf(':',left<0 ?0:left);
 				 if (left <0 || rigth <0)
 				 {
-					 System.out.println("left-"+hcut);
-					 System.out.println("scut-"+scut);
+			//		 System.out.println("left-"+hcut);
+			//		 System.out.println("scut-"+scut);
 					 continue;
 				 }
 				 scut = scut.substring(left+1, rigth);

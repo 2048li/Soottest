@@ -33,7 +33,7 @@ public class MyAnalysis extends BodyTransformer{
 	@Override
 	protected void internalTransform(Body body, String phase, Map options) {
 		// TODO Auto-generated method stub
-	
+	    System.out.println("in the internaltransform method---"+Scene.v().getApplicationClasses().toString());
 		detect = isSilentInstallapk();
 		}
 
@@ -140,8 +140,7 @@ public class MyAnalysis extends BodyTransformer{
 					 }
 					 scut = scut.substring(left+1, rigth);
 					// System.out.println("scut--"+scut);
-
-					 
+			 
 					 if (hcut.contains(scut)){
 						 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
 						     return true;
