@@ -146,15 +146,15 @@ public class sootMain {
 	//	data = Setenv();
 		int i;
 		boolean detect = false;
-	/*	String str = args[0];
+		String str = args[0];
 	
 		data.add(str);
-		System.out.println("add "+str +" to soot sucess"); */
+		System.out.println("add "+str +" to soot sucess");
 		
 		
 		
 	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
-		data.add("/home/shentanli/Downloads/appsdb/appsfrom360store/com-letv.apk");
+	//	data.add("/home/shentanli/Downloads/appsdb/appsfrom360store/com-letv.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
