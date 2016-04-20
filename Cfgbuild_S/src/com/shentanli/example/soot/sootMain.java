@@ -169,6 +169,7 @@ public class sootMain {
 		//	MyAnalysis manalysis = new MyAnalysis();
 		//	PackManager.v().getPack("wjtp").add(new Transform("wjtp.myanalysis", manalysis));
 			PackManager.v().getPack("wjtp").apply();
+			System.out.println("apply done then to runpacks");
 			PackManager.v().runPacks();
 			
 			
