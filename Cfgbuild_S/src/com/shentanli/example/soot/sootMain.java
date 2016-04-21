@@ -38,21 +38,8 @@ import soot.toolkits.graph.UnitGraph;
 
 public class sootMain {
 
-	//private final static String androidJAR = "android.jar";
-
-	//private final static String androidJAR = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
-	//private String force_android_jar = "android.jar";
-	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
-	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/xiaoxiaole.apk";
-	//private final static String appAPK = "/home/shentanli/eclipseworkspace/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk";
-
+	
 	private final static String androidJAR = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
-	//private final static String androidJAR = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/android.jar";
-	//private String force_android_jar = "android.jar";
-	//private final static String appAPK = "xiaoxiaole.apk"; //replace the name you want
-	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
-	//private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
-
    
 	private String appAPK;
 	public static void inialiseSoot(String appAPK)
@@ -70,10 +57,7 @@ public class sootMain {
 		Options.v().set_soot_classpath(androidJAR);
 		Options.v().set_whole_program(true);
 		Scene.v().allowsPhantomRefs();
-		//G.reset();
 		
-	//	Scene.v().addBasicClass("android.support.v4.view.ViewPager$SimpleOnPageChangeListener",SootClass.SIGNATURES);
-	//	Scene.v().addBasicClass("android.support.v4.view.ViewPager$MyAccessibilityDelegate",SootClass.SIGNATURES);
 		Scene.v().loadNecessaryClasses();
 		
 
@@ -92,9 +76,7 @@ public class sootMain {
 		{
 			if (fs[i].getName().endsWith(".apk"))
 			{
-			//	System.out.println("get apk");
 				tmp = path + "/" +fs[i].getName();
-			//	System.out.println("the complete apkname is:"+tmp);
 				data.add(tmp);
 			}
 		}
@@ -163,9 +145,6 @@ public class sootMain {
 		for (i=0; i < data.size(); i++)
 		{
 			
-		//	System.out.println("the apkname is:"+data.get(i));
-		//	System.out.println("now to set this apk as input");
-	//		soot.Main.main(args); // restart to set scene in soot
 			inialiseSoot(data.get(i));
 		
 			System.out.println("inialise soot done,then to detect...");
@@ -181,7 +160,7 @@ public class sootMain {
 		//	detect = manalysis.detect;
 			
 			if (detect){
-				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
+				System.out.println("this apk: "+data.get(i)+" mostly has silent install");
 			    //copy this apk to resultdir
 				String rd = "resultdir";
 				File fp = new File(rd);
@@ -200,37 +179,11 @@ public class sootMain {
 				
 			}
 			else
-				System.out.println("this apk:"+data.get(i)+"may not has silent install");		
+				System.out.println("this apk: "+data.get(i)+" may not has silent install");		
 			System.out.println("Spend time:"+(System.currentTimeMillis()-begin));
 			
 		}
 		
-		
-		
-
-		// the following codes are used to plugin 
-	//	PackManager.v().getPack("jtp").add(new Transform("jtp.myAnalysis", new MyAnalysis()));
-
-	/*	System.out.println("now to run packmanager.apply");
-		PackManager.v().getPack("wjtp").apply();
-
-		PackManager.v().runPacks();
-		//String methodname = "getRuntime";
-		
-		//getgh();
-	    
-	//	boolean detect = false;
-		detect = isSilentInstallapk();
-		if (detect)
-			System.out.println("this apk mostly has silent install");
-		else
-			System.out.println("this apk may not has silent install"); */
-		
-		//PackManager.v().writeOutput();
-	//	PackManager.v().getPack("cg").apply();
-	//	PackManager.v().getPack("wjtp").apply();
-		
-		//soot.Main.main(args);
 	}
 	
 	
@@ -238,30 +191,9 @@ public class sootMain {
 	//judge the apk
 	public static boolean isSilentInstallapk()
 	{
-	//	System.out.println("to call the ufgl");
-	//	UnitGraphLen var1 = new UnitGraphLen(); 
-		ArrayList<UnitGraph> graphs = getGraphListOfApk();
-	//	System.out.println("the length of the ufgl is "+ apkuglen);
-		
-	/*	for (int i = 0;i<apkuglen;i++)
-		{
-			if (apkug[i].size() != 0 && apkug[i].toString().isEmpty() ==false)
-			{
-				System.out.println("the size of apkup "+i+"is"+apkug[i].size());
-			System.out.println("the returned apkgraph arrary---"+i + apkug[i].getHeads());
-			}
-		}
-	*/
-	//	System.out.println("to call the dectgraph");
-		return DectGraph(graphs);
-		//int q ;
-	//	boolean result = false;
-	
 
-		/*if (apkfp.length != 0) //if there is one findpath at least,then this apk is classified to silent install
-			return true;
-		else
-			return false;*/
+		ArrayList<UnitGraph> graphs = getGraphListOfApk();
+		return DectGraph(graphs);
 	}
 	
 	
@@ -306,19 +238,7 @@ public class sootMain {
 							}
 							
 						}
-				//		System.out.println("stmt done----");
-				/*	int len = u.size();
-					for (int i = 0;i<len;i++)
-						System.out.println("the box---"+u.get(i).toString());
-					}*/
 
-			//		System.out.println("method---"+m.toString());
-		//			String sig = m.getSignature();
-			//		System.out.println("the signature of method---"+sig);
-					
-					/*Class<? extends SootMethod> classname = m.getClass();
-					System.out.println("class of sootmethod:"+classname.getName());
-					System.out.println("the classloader of the last class:"+classname.getClassLoader().toString());*/
 					
 					if ( m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
 						
@@ -329,51 +249,15 @@ public class sootMain {
 						for (int tc=0; tc<tmp2.size();tc++)
 							//if (tmp2.get(tc).equals("runtime")) 
 						{
-					//		if (tmp2.get(tc).getClass().getName().equalsIgnoreCase(c1) || tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2) || 
-					//				tmp2.get(tc).getClass().getName().equalsIgnoreCase(c3) )
-					//		if(tmp2.get(tc).getClass().getName().equalsIgnoreCase(c2))
-				//			{				
-							//System.out.println("the classname from the use&defboxes###---"+tmp2.get(tc).getClass().getName());
-				//			if (tmp2.get(tc).toString().contains("Runtime") || tmp2.get(tc).toString().contains("install"))
-				//			{
-								
-								/*File file = new File("output.txt");
-								FileOutputStream fis = new FileOutputStream(file);
-								PrintStream out = new PrintStream(fis);*/
-				//				PrintStream out = new PrintStream(new FileOutputStream("output.txt"));
-				//				System.setOut(out);
-								
+							
 								System.out.println("!!!getuseanddefboxes---**"+tmp2.get(tc).toString());
 								
 								if (tmp2.get(tc).toString().contains("install"))
 								{
 								
 								}
-			//				}
-							
-			//				}
 						    	
 						}
-						
-				/*		List<ValueBox> value = m.getActiveBody().getDefBoxes();
-						int len1 = value.size();
-						int i;
-						for (i= 0; i<len1;i++)
-						{
-							//if (value.get(i).toString().contains("install"))
-							System.out.println("getdefboxes&&--" + value.get(i).toString());
-							
-						}
-		
-						java.util.Iterator<ValueBox> tm = m.getActiveBody().getUseBoxes().iterator();
-						if (tm.hasNext())
-							System.out.println("getuseboxes ----"+tm.toString());
-						java.util.Iterator<Unit> u = m.getActiveBody().getUnits().snapshotIterator();
-						if(u.hasNext()){
-							System.out.println("getUnits**---" + u.toString());
-						
-							}*/
-						    
 
 					}
 			}
@@ -400,12 +284,6 @@ public class sootMain {
 		while (cg.iterator().hasNext())
 		{
 			
-			//System.out.println("in the showing method");
-		//	if (tt.next().toString().contains("exec"))
-		//	{
-				
-			//System.out.println("the cg node ---"+cg.edgesInto(tt.next()));
-		//	}
 			Edge e = cg.iterator().next(); 
 			System.out.println("the edge of the callgraph"+e.toString());
 			Body b = e.src().getActiveBody();
@@ -494,11 +372,6 @@ public class sootMain {
 	//get the graph list of the apk[each method in each class]
 	static ArrayList<UnitGraph> getGraphListOfApk()
 	{
-	//	System.out.println("the varlebn is "+ var1.uglen);
-	//	System.out.println("in the ufgl method and to get UnitGraph array");
-		//UnitGraphLen var1 = new UnitGraphLen(); 
-		
-	//	UnitGraph tmp ;
 		ArrayList<UnitGraph> graphs = new ArrayList<UnitGraph>();
 	//	System.out.println("applicationclasses is :"+Scene.v().getApplicationClasses().toString());
 	   
@@ -517,9 +390,6 @@ public class sootMain {
 		     		}
 				}
 			}
-	//	System.out.println(" uglen is "+var1.uglen);
-	//	System.out.println("the i is "+i);
-	//	System.out.println("now to return--");
 		return graphs;
 		
 	}
@@ -537,7 +407,6 @@ public class sootMain {
 		{
 			Unit ut = it.next();
 
-			//System.out.println("the ut is empty ??"+ut.toString().isEmpty());
 			if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime")) // if contains specialinvoke means that it is not the bottom 
 			{
 	
@@ -550,10 +419,7 @@ public class sootMain {
 		return false;
 	
 	}
-	
-	
-	
-	
+
 	
 	//traverse graph list to find target graph
 	static boolean DectGraph(ArrayList<UnitGraph> graphs)
@@ -579,20 +445,15 @@ public class sootMain {
 			 {
 				 String scut = specialunits.get(i).toString().trim();
 				 String hcut = ug.getHeads().get(0).toString();
-			//	 System.out.println("hcut=="+ug.getHeads().get(0));
-			//	 System.out.println("scut=="+specialunits.get(i));
+			
 				 int left = scut.indexOf('<');
 				 int rigth = scut.indexOf(':',left<0 ?0:left);
 				 if (left <0 || rigth <0)
 				 {
-			//		 System.out.println("left-"+hcut);
-			//		 System.out.println("scut-"+scut);
+		
 					 continue;
 				 }
-				 scut = scut.substring(left+1, rigth);
-				// System.out.println("scut--"+scut);
-
-				 
+				 scut = scut.substring(left+1, rigth);	 
 				 if (hcut.contains(scut)){
 					 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
 					     return true;
