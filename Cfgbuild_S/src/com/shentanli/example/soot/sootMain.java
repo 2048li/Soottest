@@ -2,6 +2,9 @@ package com.shentanli.example.soot;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -10,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import soot.Body;
 import soot.G;
@@ -47,7 +53,6 @@ public class sootMain {
 	//private final static String appAPK = "/Users/shentanli/Documents/githubfile/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; mac-pc
 	//private final static String appAPK = "/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk"; //debian-pc
 
-	//private static final int SIGNATURES = 1;
    
 	private String appAPK;
 	public static void inialiseSoot(String appAPK)
@@ -152,9 +157,7 @@ public class sootMain {
 		System.out.println("add "+str +" to soot sucess");
 		
 		
-		
 	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
-	//	data.add("/home/shentanli/Downloads/appsdb/appsfrom360store/com-letv.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
@@ -177,8 +180,25 @@ public class sootMain {
 			detect = isSilentInstallapk();
 		//	detect = manalysis.detect;
 			
-			if (detect)
+			if (detect){
 				System.out.println("this apk:"+data.get(i)+"mostly has silent install");
+			    //copy this apk to resultdir
+				String rd = "resultdir";
+				File fp = new File(rd);
+				if (!fp.exists()){
+					fp.mkdir();
+				}
+				
+				File from = new File(data.get(i));
+				try {
+					FileUtils.copyFileToDirectory(from, fp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					
+				
+			}
 			else
 				System.out.println("this apk:"+data.get(i)+"may not has silent install");		
 			System.out.println("Spend time:"+(System.currentTimeMillis()-begin));
@@ -554,7 +574,7 @@ public class sootMain {
 			 }
 		 }
 		 for(int i = 0;i<specialunits.size();i++){
-			 System.out.println("size of specialunits is:"+specialunits.size());
+			// System.out.println("size of specialunits is:"+specialunits.size());
 			 for (UnitGraph ug : graphs)
 			 {
 				 String scut = specialunits.get(i).toString().trim();
