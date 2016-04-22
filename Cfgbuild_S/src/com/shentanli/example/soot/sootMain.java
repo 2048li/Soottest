@@ -438,6 +438,7 @@ public class sootMain {
 			 
 			 if(ContainsRun(ug))
 			 {
+			//	 System.out.println("add special");
 				 AddSpecialUnits(ug, specialunits, specialgraphs);
 				 
 			 }
@@ -502,10 +503,13 @@ public class sootMain {
 	
 	private static boolean CheckSingleMethod(UnitGraph ug)
 	{
-		for(Unit u: ug)
+		for(Unit u: ug){
+			if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u.toString().contains("getRuntime"))
+				return true;
 			for(Unit u2: ug)
-				if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u2.toString().isEmpty() == false && u2.toString().contains("getRuntime") || u.toString().isEmpty() == false && u.toString().contains("pm instlal") && u.toString().contains("getRuntime") || u2.toString().isEmpty() == false && u2.toString().contains("pm install") && u2.toString().contains("getRuntime"))
+				if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u2.toString().isEmpty() == false && u2.toString().contains("getRuntime"))
 					return true;
+		}
 		return false;
 		
 	}
