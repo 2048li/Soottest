@@ -407,7 +407,7 @@ public class sootMain {
 		{
 			Unit ut = it.next();
 
-			if (ut.toString().isEmpty() == false && ut.toString().contains("Runtime")) // if contains specialinvoke means that it is not the bottom 
+			if (ut.toString().isEmpty() == false && ut.toString().contains("getRuntime")) // if contains specialinvoke means that it is not the bottom 
 			{
 	
 				   return true;  //candidate is not concrete so if in for use the length of candidate may get the wrong result.
@@ -433,6 +433,9 @@ public class sootMain {
 		ArrayList<UnitGraph> specialgraphs = new ArrayList<UnitGraph>();
 		 for (UnitGraph ug: graphs)
 		 {
+			 if (CheckSingleMethod(ug))
+				 return true;
+			 
 			 if(ContainsRun(ug))
 			 {
 				 AddSpecialUnits(ug, specialunits, specialgraphs);
@@ -495,4 +498,15 @@ public class sootMain {
 	
 	
 }
+	
+	
+	private static boolean CheckSingleMethod(UnitGraph ug)
+	{
+		for(Unit u: ug)
+			for(Unit u2: ug)
+				if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u2.toString().isEmpty() == false && u2.toString().contains("getRuntime") || u.toString().isEmpty() == false && u.toString().contains("pm instlal") && u.toString().contains("getRuntime") || u2.toString().isEmpty() == false && u2.toString().contains("pm install") && u2.toString().contains("getRuntime"))
+					return true;
+		return false;
+		
+	}
 }
