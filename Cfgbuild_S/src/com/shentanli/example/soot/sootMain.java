@@ -135,11 +135,11 @@ public class sootMain {
 		boolean detect = false;
 		String str = args[0];
 	
-		data.add(str);
+		data.add(str); 
 		System.out.println("add "+str +" to soot sucess");
 		
 		
-	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug.apk");
+	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug-re.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
@@ -433,33 +433,37 @@ public class sootMain {
 		ArrayList<UnitGraph> specialgraphs = new ArrayList<UnitGraph>();
 		 for (UnitGraph ug: graphs)
 		 {
+							 
 			 if (CheckSingleMethod(ug))
+				 return true;
+			 
+			 if (CheckSingleMethodwithTwoinvoke(ug, graphs))
 				 return true;
 			 
 			 if(ContainsRun(ug))
 			 {
-			//	 System.out.println("add special");
 				 AddSpecialUnits(ug, specialunits, specialgraphs);
 				 
 			 }
 		 }
 		 for(int i = 0;i<specialunits.size();i++){
-			// System.out.println("size of specialunits is:"+specialunits.size());
+			 boolean suj = ContainsInstall(specialgraphs.get(i));
 			 for (UnitGraph ug : graphs)
 			 {
 				 String scut = specialunits.get(i).toString().trim();
 				 String hcut = ug.getHeads().get(0).toString();
-			
-				 int left = scut.indexOf('<');
+				 
+			/*	 int left = scut.indexOf('<');
 				 int rigth = scut.indexOf(':',left<0 ?0:left);
 				 if (left <0 || rigth <0)
 				 {
 		
 					 continue;
 				 }
-				 scut = scut.substring(left+1, rigth);	 
-				 if (hcut.contains(scut)){
-					 if (ContainsInstall(specialgraphs.get(i)) || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
+				 scut = scut.substring(left+1, rigth);	 */
+			//	 if (hcut.contains(scut)){
+				 if (ComparespecialTohead(scut, hcut)) {
+					 if ( suj || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
 					     return true;
 				 }
 				 
@@ -474,6 +478,17 @@ public class sootMain {
 			
 	}
 
+	
+	private static boolean ComparespecialTohead(String special, String head)
+	{
+		int left = special.indexOf('<');
+		int right = special.indexOf(':',left<0 ? 0:left);
+		if (left <0 || right <0)
+			return false;
+		String scut = special.substring(left+1, right);
+		return head.contains(scut);
+		
+	}
 		
 
 	private static boolean ContainsInstall(UnitGraph unitGraph) {
@@ -503,6 +518,7 @@ public class sootMain {
 	
 	private static boolean CheckSingleMethod(UnitGraph ug)
 	{
+		//check single unit of a graph
 		for(Unit u: ug){
 			if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u.toString().contains("getRuntime"))
 				return true;
@@ -510,7 +526,33 @@ public class sootMain {
 				if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u2.toString().isEmpty() == false && u2.toString().contains("getRuntime"))
 					return true;
 		}
-		return false;
 		
+		
+		return false;
+	}
+	
+	private static boolean CheckSingleMethodwithTwoinvoke(UnitGraph ug, ArrayList<UnitGraph> graphs)
+	{
+		ArrayList<Unit> specialunits = new ArrayList();
+		ArrayList<UnitGraph> specialgraphs = new ArrayList();
+		AddSpecialUnits(ug, specialunits, specialgraphs );
+		boolean invokecmd = false;
+		boolean invokeruntime = false;
+		for (int i =0;i<specialunits.size();i++)
+		{
+			for (UnitGraph ugt : graphs)
+				if(ComparespecialTohead(specialunits.get(i).toString().trim(), ugt.getHeads().get(0).toString()))
+					if (ContainsInstall(ugt))
+						invokecmd = true;
+					else if (ContainsRun(ugt))
+						invokeruntime = true;
+			if (invokecmd && invokeruntime)
+			{
+				return true;
+			}			
+				
+		}
+		
+		return false;
 	}
 }
