@@ -133,13 +133,13 @@ public class sootMain {
 	//	data = Setenv();
 		int i;
 		boolean detect = false;
-		String str = args[0];
+	/*	String str = args[0];
 	
 		data.add(str); 
-		System.out.println("add "+str +" to soot sucess");
+		System.out.println("add "+str +" to soot sucess"); */
 		
 		
-	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/app-debug-re.apk");
+		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/91desktop.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
@@ -394,10 +394,8 @@ public class sootMain {
 		
 	}
 	
-	
-	static boolean  ContainsRun(UnitGraph ug)
+	static boolean ContainsString(UnitGraph ug, String s)
 	{
-		 
 		if (ug.size() <= 0)
 			return false;
 			
@@ -407,17 +405,11 @@ public class sootMain {
 		{
 			Unit ut = it.next();
 
-			if (ut.toString().isEmpty() == false && ut.toString().contains("getRuntime")) // if contains specialinvoke means that it is not the bottom 
-			{
+			if (ut.toString().isEmpty() == false && ut.toString().contains(s)) 
+			   return true; 
 	
-				   return true;  //candidate is not concrete so if in for use the length of candidate may get the wrong result.
-
-			}
-	
-		}	
-		
+		}
 		return false;
-	
 	}
 
 	
@@ -437,10 +429,14 @@ public class sootMain {
 			 if (CheckSingleMethod(ug))
 				 return true;
 			 
-			 if (CheckSingleMethodwithTwoinvoke(ug, graphs))
+			 if (CheckSingleMethodwithTwoinvoke(ug, graphs)) // in this graph has two specialinvoke containing install and getRuntime respectivly 
 				 return true;
 			 
-			 if(ContainsRun(ug))
+			 if (ContainsString(ug, "pm install"))
+				 if (SearchDepthofoneGraph(ug, graphs)) // one containing install specialinvoke another containing getruntime and dataoutputstream to exec
+				    return true;
+			 
+			 if(ContainsString(ug, "getRuntime"))
 			 {
 				 AddSpecialUnits(ug, specialunits, specialgraphs);
 				 
@@ -544,7 +540,7 @@ public class sootMain {
 				if(ComparespecialTohead(specialunits.get(i).toString().trim(), ugt.getHeads().get(0).toString()))
 					if (ContainsInstall(ugt))
 						invokecmd = true;
-					else if (ContainsRun(ugt))
+					else if (ContainsString(ugt, "getRuntime"))
 						invokeruntime = true;
 			if (invokecmd && invokeruntime)
 			{
@@ -555,4 +551,38 @@ public class sootMain {
 		
 		return false;
 	}
+
+	private static boolean SearchDepthofoneGraph(UnitGraph ug, ArrayList<UnitGraph> graphs) //condition is this graph has install string and to find exec
+	{
+		for (Unit u:ug)
+		{
+			if (u.toString().contains("staticinvoke")){
+				System.out.println("invoke:"+u.toString());
+				for(UnitGraph ugt :graphs)
+				{
+			
+					if (ComparespecialTohead(u.toString().trim(), ugt.getHeads().get(0).toString()))
+					{
+						System.out.println("get pairs");
+						System.out.println("head---"+ugt.getHeads().get(0).toString());
+						for (Unit ut: ugt){
+							if (ut.toString().contains("staticinvoke")){
+								System.out.println("invoke---"+ut.toString());
+								for (UnitGraph ugtt : graphs)
+								{
+								 	if (ComparespecialTohead(ut.toString().trim(), ugtt.getHeads().get(0).toString())){
+								 		System.out.println("find head");
+								    	if (ContainsString(ugtt, "getRuntime") && ContainsString(ugtt, "DataOutputStream") && ContainsString(ugtt, "Process"))
+									    	return true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 }
+
