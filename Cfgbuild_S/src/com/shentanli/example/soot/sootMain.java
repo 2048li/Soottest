@@ -133,13 +133,13 @@ public class sootMain {
 	//	data = Setenv();
 		int i;
 		boolean detect = false;
-	/*	String str = args[0];
+		String str = args[0];
 	
 		data.add(str); 
-		System.out.println("add "+str +" to soot sucess"); */
+		System.out.println("add "+str +" to soot sucess"); 
 		
 		
-		data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/91desktop.apk");
+	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/91desktop.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
@@ -448,22 +448,10 @@ public class sootMain {
 			 {
 				 String scut = specialunits.get(i).toString().trim();
 				 String hcut = ug.getHeads().get(0).toString();
-				 
-			/*	 int left = scut.indexOf('<');
-				 int rigth = scut.indexOf(':',left<0 ?0:left);
-				 if (left <0 || rigth <0)
-				 {
-		
-					 continue;
-				 }
-				 scut = scut.substring(left+1, rigth);	 */
-			//	 if (hcut.contains(scut)){
-				 if (ComparespecialTohead(scut, hcut)) {
+				 if (ComparespecialTohead(scut, hcut)) 
 					 if ( suj || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
 					     return true;
-				 }
-				 
-				 
+ 
 			 }
 			 
 		 }
@@ -556,31 +544,17 @@ public class sootMain {
 	{
 		for (Unit u:ug)
 		{
-			if (u.toString().contains("staticinvoke")){
-				System.out.println("invoke:"+u.toString());
+			if (u.toString().contains("specialinvoke") || u.toString().contains("virtualinvoke") || u.toString().contains("staticinvoke"))
 				for(UnitGraph ugt :graphs)
-				{
-			
 					if (ComparespecialTohead(u.toString().trim(), ugt.getHeads().get(0).toString()))
-					{
-						System.out.println("get pairs");
-						System.out.println("head---"+ugt.getHeads().get(0).toString());
-						for (Unit ut: ugt){
-							if (ut.toString().contains("staticinvoke")){
-								System.out.println("invoke---"+ut.toString());
+						for (Unit ut: ugt)
+							if (ut.toString().contains("invoke"))
 								for (UnitGraph ugtt : graphs)
-								{
-								 	if (ComparespecialTohead(ut.toString().trim(), ugtt.getHeads().get(0).toString())){
-								 		System.out.println("find head");
+								
+								 	if (ComparespecialTohead(ut.toString().trim(), ugtt.getHeads().get(0).toString()))
 								    	if (ContainsString(ugtt, "getRuntime") && ContainsString(ugtt, "DataOutputStream") && ContainsString(ugtt, "Process"))
-									    	return true;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+									    	return true;		
+			
 		}
 		return false;
 	}
