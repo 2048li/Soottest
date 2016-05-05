@@ -1,12 +1,15 @@
 package com.shentanli.example.soot;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -137,9 +140,9 @@ public class sootMain {
 	
 		data.add(str); 
 		System.out.println("add "+str +" to soot sucess"); 
+	
 		
-		
-	//	data.add("/home/shentanli/tmpgithub/Soottest/Cfgbuild_S/src/com/shentanli/example/soot/91desktop.apk");
+//		data.add("/home/shentanli/AndroidStudioProjects/Silentinstall/app/build/outputs/apk/app-debug.apk");
 		
 		
 		for (i=0; i < data.size(); i++)
@@ -196,134 +199,7 @@ public class sootMain {
 		return DectGraph(graphs);
 	}
 	
-	
-	//the call graph... just to test and print
-	public static void getgh()
-	{
-		
-		
-		List<SootMethod> tmpent = new ArrayList<SootMethod>();
-	
-		for (SootClass c:Scene.v().getApplicationClasses())
-		
-		{
-			System.out.println("sootclass "+ c);			
-			for (SootMethod m:c.getMethods()){
-			//	if ( m.getName().indexOf(methodname) != -1)
-					tmpent.add(m);	
-					
-					System.out.println("method---"+m.toString());
-					if (m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
-					//List<UnitBox> u = m.getActiveBody().getAllUnitBoxes();
-									
-						//graph relating
-						Ugf(m.getActiveBody());
-		
-						
-						for (java.util.Iterator<Unit> uit = m.getActiveBody().getUnits().iterator();uit.hasNext();)
-						{
-						    Stmt s = (Stmt) uit.next();
-						//    System.out.println("from stmt all-----"+s.toString());
-						    if (s.toString().contains("install"))
-						    {
-						    	List<UnitBox> pu = s.getBoxesPointingToThis();
-						    	for (int p = 0;p<pu.size();p++)
-						    		System.out.println("the unitbox pointing to installstr"+pu.toString());
-						    	
-						    }
-						    
-							if (s.containsInvokeExpr())
-							{
-								//System.out.println("from stmt--"+s.toString());
-							}
-							
-						}
 
-					
-					if ( m.hasActiveBody() && m.getActiveBody().getUnits().isEmpty() == false) {
-						
-						List<UnitBox> tmp1 = m.getActiveBody().getAllUnitBoxes();
-			//			for (int tc = 0; tc<tmp1.size(); tc++)
-			//				System.out.println("----getallunitboxes---:"+tmp1.get(tc).toString());
-						List tmp2 = m.getActiveBody().getUseAndDefBoxes();
-						for (int tc=0; tc<tmp2.size();tc++)
-							//if (tmp2.get(tc).equals("runtime")) 
-						{
-							
-								System.out.println("!!!getuseanddefboxes---**"+tmp2.get(tc).toString());
-								
-								if (tmp2.get(tc).toString().contains("install"))
-								{
-								
-								}
-						    	
-						}
-
-					}
-			}
-			//Scene.v().setEntryPoints(tmpent);
-		}
-	}
-		System.out.println("-----to get the graph---");	
-		
-		System.out.println("next to call graph");  
-		@SuppressWarnings("unused")
-		CallGraph cg = Scene.v().getCallGraph();
-		
-	  java.util.Iterator<MethodOrMethodContext> tt = cg.sourceMethods();
-	  
-	 //  System.out.println("look at the method in the graph");
-		while(tt.hasNext())
-		{
-			
-		//	System.out.println("graph method---"+tt.next().toString());
-		}
-
-	    
-		//System.out.println("to show the call graph");
-		while (cg.iterator().hasNext())
-		{
-			
-			Edge e = cg.iterator().next(); 
-			System.out.println("the edge of the callgraph"+e.toString());
-			Body b = e.src().getActiveBody();
-			//internalTransform(b,methodname);
-		}
-	
-		
-	//	CompleteUnitGraph cug = new CompleteUnitGraph(null);
-	
-		
-	}
-	
-	
-	
-	protected static void internalTransform(Body body,String name){
-		SootMethod method = body.getMethod();
-/*		if (method.getName().equals(name) == false) // replace the methodname with the name u want to analysis
-		{MethodOrMethodContext lll = tt.next(); 
-		System.out.println("methodorcmethodcontext ---"+lll.toString());
-			System.out.println("method name --"+method.getName().toString()) ;
-		}
-		*/
-		BriefUnitGraph bg = new BriefUnitGraph(body); 
-		List<Unit> ulist = bg.getHeads();
-		Unit u = ulist.get(0);
-		while (!unitBelongList(u, bg.getTails()))
-		{
-			u=bg.getSuccsOf(u).get(0);
-			System.out.println("ege name:--"+u.toString());
-		}
-	/*	ExceptionalUnitGraph g = new ExceptionalUnitGraph(body);
-		List<Unit> ulist = g.getHeads();
-		Unit u = ulist.get(0);//make one of the funcs as entry: get one control flow
-		while(!unitBelongList(u,g.getTails()))//traverse till the last element
-		{
-			u=g.getSuccsOf(u).get(0);//get the next node
-			System.out.println("this is the result---:"+u.toString());
-		}*/
-	}
-	
 	static boolean unitBelongList(Unit u, List<Unit> g)//judge if the node is in the list
 	{
 		for (Unit i:g)
@@ -333,40 +209,6 @@ public class sootMain {
 		}
 		return false;
 	}
-	
-	
-	static void Ugf(Body body)
-	{
-		UnitGraph ugf = new BriefUnitGraph(body);
-	    //heads and tails of bfg
-		java.util.Iterator<Unit>  hd = ugf.getHeads().iterator();
-		java.util.Iterator<Unit> tl = ugf.getTails().iterator();
-		while(hd.hasNext())
-		{
-			System.out.println("heads of briefunitgraph---"+hd.next().toString());
-			
-		}
-		while (tl.hasNext()){
-		//	if (tl.next().toString().isEmpty() == false && tl.next().toString().contains("install"))
-			 System.out.println("tails of briefunitgraph--"+tl.next().toString());
-
-			// if(tl.next().toString().contains("install"))
-				// System.out.println("tail contails install---");
-		}
-		      
-	//   java.util.Iterator<Unit> ut = ugf.getExtendedBasicBlockPathBetween(hd.next(), tl.next()).iterator(); 
-	//   while (ut.hasNext())
-	//	   System.out.println("path from hd to tl---**"+ut.next().toString());
-		java.util.Iterator<Unit> it = ugf.iterator();
-		while(it.hasNext())
-		{
-			//Unit u = it.next();
-			System.out.println("the graph unit^^^^^"+it.next().toString());
-		}   
-		
-		
-	}
-	
 	
 //	static int Max = 5000;
 	//get the graph list of the apk[each method in each class]
@@ -418,23 +260,21 @@ public class sootMain {
 	{
 		System.out.println("in the Dectgraph method---");
 	//	System.out.println("the length of the unitgraph is :"+apkuglen);
+		 
+		
 		if (graphs.size() != 0)
 		{
-		
+			boolean sr = SearchWholeapk(graphs);
+			if (sr)
+				return true;
+	
 		ArrayList<Unit> specialunits = new ArrayList<Unit>();
 		ArrayList<UnitGraph> specialgraphs = new ArrayList<UnitGraph>();
 		 for (UnitGraph ug: graphs)
 		 {
-							 
-			 if (CheckSingleMethod(ug))
-				 return true;
-			 
-			 if (CheckSingleMethodwithTwoinvoke(ug, graphs)) // in this graph has two specialinvoke containing install and getRuntime respectivly 
-				 return true;
-			 
-			 if (ContainsString(ug, "pm install"))
-				 if (SearchDepthofoneGraph(ug, graphs)) // one containing install specialinvoke another containing getruntime and dataoutputstream to exec
-				    return true;
+//			 if (ContainsString(ug, "pm install"))
+//				 if (SearchDepthofoneGraph(ug, graphs)) // one containing install specialinvoke another containing getruntime and dataoutputstream to exec
+//				    return true;
 			 
 			 if(ContainsString(ug, "getRuntime"))
 			 {
@@ -443,13 +283,13 @@ public class sootMain {
 			 }
 		 }
 		 for(int i = 0;i<specialunits.size();i++){
-			 boolean suj = ContainsInstall(specialgraphs.get(i));
+			 boolean suj = ContainsString(specialgraphs.get(i),"pm install");
 			 for (UnitGraph ug : graphs)
 			 {
 				 String scut = specialunits.get(i).toString().trim();
 				 String hcut = ug.getHeads().get(0).toString();
 				 if (ComparespecialTohead(scut, hcut)) 
-					 if ( suj || ContainsInstall(ug)) // the index of specialgraph not equals to that of the specialunits...
+					 if ( suj || ContainsString(ug, "pm install")) // the index of specialgraph not equals to that of the specialunits...
 					     return true;
  
 			 }
@@ -457,7 +297,7 @@ public class sootMain {
 		 }
 		 return false;
 		
-		}
+		} 
 		return false;
 			
 	}
@@ -472,16 +312,6 @@ public class sootMain {
 		String scut = special.substring(left+1, right);
 		return head.contains(scut);
 		
-	}
-		
-
-	private static boolean ContainsInstall(UnitGraph unitGraph) {
-		// TODO Auto-generated method stub
-		for (Unit u: unitGraph)
-			if (u.toString().isEmpty() == false && u.toString().contains("pm install"))
-				return true;
-		
-		return false;
 	}
 
 	private static void AddSpecialUnits(UnitGraph ug,
@@ -503,43 +333,88 @@ public class sootMain {
 	private static boolean CheckSingleMethod(UnitGraph ug)
 	{
 		//check single unit of a graph
+		
 		for(Unit u: ug){
 			if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u.toString().contains("getRuntime"))
 				return true;
+			boolean b1 = u.toString().contains("pm install");
 			for(Unit u2: ug)
-				if (u.toString().isEmpty() == false && u.toString().contains("pm install") && u2.toString().isEmpty() == false && u2.toString().contains("getRuntime"))
-					return true;
+				if(u.toString().isEmpty() == false && u2.toString().isEmpty() == false){
+		    		
+		    		boolean b2 = u2.toString().contains("getRuntime");
+			    	boolean b4 = u2.toString().contains("DataOutputStream");
+			    	if (b1 && b2 || b4 && b1)
+			    		return true;
+				}
+			
 		}
 		
 		
 		return false;
 	}
 	
-	private static boolean CheckSingleMethodwithTwoinvoke(UnitGraph ug, ArrayList<UnitGraph> graphs)
+	private static boolean CheckSingleMethodwithTwoinvoke(UnitGraph ug, ArrayList<UnitGraph> graphs) //that is command and runtime are seperated  but related by this method
 	{
 		ArrayList<Unit> specialunits = new ArrayList();
 		ArrayList<UnitGraph> specialgraphs = new ArrayList();
 		AddSpecialUnits(ug, specialunits, specialgraphs );
+		
+		//check first install way--getruntime
 		boolean invokecmd = false;
 		boolean invokeruntime = false;
 		for (int i =0;i<specialunits.size();i++)
 		{
+			
 			for (UnitGraph ugt : graphs)
 				if(ComparespecialTohead(specialunits.get(i).toString().trim(), ugt.getHeads().get(0).toString()))
-					if (ContainsInstall(ugt))
+				{
+					if (ContainsString(ugt, "pm install"))
 						invokecmd = true;
-					else if (ContainsString(ugt, "getRuntime"))
+				    if (ContainsString(ugt, "getRuntime"))
 						invokeruntime = true;
+				}
 			if (invokecmd && invokeruntime)
 			{
 				return true;
 			}			
 				
 		}
+		//check second install way -- dataoutputstream + pm install : two depth call
+		for (Unit u:ug){
+			if (u.getUseAndDefBoxes().toString().contains("pm install")) //pass directly
+				for (UnitGraph ugt :graphs){	
+					if (ComparespecialTohead(u.toString().trim(), ugt.getHeads().get(0).toString()))
+						if (ContainsString(ugt, "DataOutputStream"))
+							return true;
+				}
+		} 
+		boolean bdataoutput = false;
+		UnitGraph result = null;
+		
+		for(Unit u:ug)
+			if (u.getUseAndDefBoxes().toString().contains("virtualinvoke")){// pass indirectly
+				for(UnitGraph ugt:graphs){
+					if(ComparespecialTohead(u.toString().trim(), ugt.getHeads().get(0).toString()))
+						if(ContainsString(ugt, "pm install")){
+							invokecmd = true;
+						}
+		    	}
+				Unit preds = ug.getPredsOf(u).get(0);
+				if ( preds.toString().isEmpty() == false && preds.toString().contains("virtualinvoke")){
+					for(UnitGraph ugtt:graphs){
+						if(ComparespecialTohead(preds.toString().trim(), ugtt.getHeads().get(0).toString()))
+							if(ContainsString(ugtt, "DataOutputStream") )
+								bdataoutput = true;
+					}
+				}
+		
+			  }
+		
 		
 		return false;
 	}
 
+	
 	private static boolean SearchDepthofoneGraph(UnitGraph ug, ArrayList<UnitGraph> graphs) //condition is this graph has install string and to find exec
 	{
 		for (Unit u:ug)
@@ -558,5 +433,48 @@ public class sootMain {
 		}
 		return false;
 	}
+	
+	//considering there is no useless command---state command but not use it
+	public static boolean SearchWholeapk(ArrayList<UnitGraph> graphs)
+	{
+
+		if(SearchgetRuntimeAndOutputStreamwithcmd(graphs))
+			return true;
+		if(SearchAdbinstall(graphs))
+			return true;
+		return false;
+	}
+
+	private static  boolean SearchgetRuntimeAndOutputStreamwithcmd(
+			ArrayList<UnitGraph> graphs) {
+		// TODO Auto-generated method stub
+		for (UnitGraph ug:graphs)
+			if (CheckSingleMethod(ug) ||  CheckSingleMethodwithTwoinvoke(ug, graphs))
+				return true;
+		return false;
+	}
+
+	private static  boolean SearchAdbinstall(ArrayList<UnitGraph> graphs) {
+		// TODO Auto-generated method stub
+		boolean bcmd = false;
+		boolean badb = false;
+		boolean adb = false;
+		for (UnitGraph ug : graphs)
+			for (Unit u : ug){
+				if (u.toString().contains("pm install"))
+					bcmd = true;
+				if (u.toString().contains("Adb"))
+					adb = true;
+				if ((u.toString().contains("InetAddress") || u.toString().contains("InetSocketAddress") || u.toString().contains("SocketChannel") ) && adb )
+					badb = true;
+			}
+		if(bcmd && badb)
+			return true;
+
+		return false;
+	}
+
+
+	
 }
 
