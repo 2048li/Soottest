@@ -157,7 +157,7 @@ public class sootMain {
 			System.out.println("apply done then to runpacks");
 			PackManager.v().runPacks();
 			
-			
+			System.out.println("inialise spend time:"+(System.currentTimeMillis()-begin));
 			System.out.println("to call issilentinstallapk");
 			detect = isSilentInstallapk();
 		//	detect = manalysis.detect;
@@ -342,7 +342,7 @@ public class sootMain {
 				if(u.toString().isEmpty() == false && u2.toString().isEmpty() == false){
 		    		
 		    		boolean b2 = u2.toString().contains("getRuntime");
-			    	boolean b4 = u2.toString().contains("DataOutputStream");
+			    	boolean b4 = u2.toString().contains("DataOutputStream") || u2.toString().toLowerCase().contains("bufferedoutputstream");
 			    	if (b1 && b2 || b4 && b1)
 			    		return true;
 				}
@@ -352,6 +352,7 @@ public class sootMain {
 		
 		return false;
 	}
+	
 	
 	private static boolean CheckSingleMethodwithTwoinvoke(UnitGraph ug, ArrayList<UnitGraph> graphs) //that is command and runtime are seperated  but related by this method
 	{
@@ -384,7 +385,7 @@ public class sootMain {
 			if (u.getUseAndDefBoxes().toString().contains("pm install")) //pass directly
 				for (UnitGraph ugt :graphs){	
 					if (ComparespecialTohead(u.toString().trim(), ugt.getHeads().get(0).toString()))
-						if (ContainsString(ugt, "DataOutputStream"))
+						if (ContainsString(ugt, "DataOutputStream") || ContainsString(ugt, "bufferedoutputstream"))
 							return true;
 				}
 		} 
